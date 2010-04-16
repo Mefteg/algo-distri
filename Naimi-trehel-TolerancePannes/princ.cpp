@@ -70,6 +70,7 @@ int TimeOut = 2;
 // Si il reçoit le message "T_Mon_Next" il change cette variable
 // pour éviter d'envoyer un message "Failure" (voir main)
 int T_Mon_Next=-1;
+int JAI_JETON=-1;
 
 ///////////////
 // FONCTIONS //
@@ -145,6 +146,9 @@ void traiterMessage() {
 	// Si aprés un second "TimeOut" je ne reçoit aucune réponse à mon "Consult"
 	// alors j'en déduit que mon prédécesseur est défaillant ou que ma demande du jeton à été perdu.
 	// Je diffuse alors un message "Failure" pour détecter la présence du jeton
+	
+	// Variable JAI_JETON
+	
 	// Si le possesseur du jeton répond => recouvrement individuel, on refait notre demande du jeton
 	// Sinon aucune réponse => recouvrement global, on lance une éléction pour régénérer le jeton
 	// Alors l’arbre des last est réinitialisé et la file des next est supprimé.
@@ -351,17 +355,21 @@ int main ( int argc, char ** argv )
 	        		}
         			sleep(TimeOut);
         			// Si aprés TimeOut il ne répond pas T_Mon_Next on envoi Failure.
-        			if(T_Mon_Next==-1) {
+        			if(T_Mon_Next == -1) {
         				for(int i=port; i<port+n; i++) {
 		    				if(voisins[i]!=-1 && i!=mon_port) {
 				    			write(voisins[i], "Failure" , MAX_SIZE);
         						cout << "Message FAILURE envoyé à " << i << endl;
 				    		}
 			    		}
-        				//si pas de réponse => recouvrement global
-        				//sinon => recouvrement individuel
+			    		//si pas de réponse => recouvrement global
+			    		if(JAI_JETON == -1) {
+			    		
+			    		}
+        				//sinon => recouvrement individuel => On relance notre requête.
+        				
         			}
-        			// sinon S'il répond T_Mon_Next c bon il continu d'attendre le jeton
+        			// sinon S'il répond T_Mon_Next c bon il continu d'attendre le jeton...
 	        	}
         	}
         }
