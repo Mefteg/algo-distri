@@ -65,7 +65,7 @@ int next=-1;
 //Pour savoir s'il possède le jeton
 bool avoirJeton;
 //TimeOut va nous servir pour la tolérance aux pannes
-int TimeOut = 6;
+int TimeOut = 2;
 
 // Si il reçoit le message "T_Mon_Next" il change cette variable
 // pour éviter d'envoyer un message "Failure" (voir main)
@@ -343,13 +343,21 @@ int main ( int argc, char ** argv )
         		// Si au bout d'un "TimeOut" on a pas le jeton, on envoi "Consult"
         		sleep(TimeOut);
         		if( !avoirJeton ) {
-        			write(voisins[last], "Consult" , MAX_SIZE);
-        			cout << "Message CONSULT envoyé à " << last << endl;
+        			for(int i=port; i<port+n; i++) {
+        				if(voisins[i]!=-1 && i!=mon_port) {
+		        			write(voisins[i], "Consult" , MAX_SIZE);
+		        			cout << "Message CONSULT envoyé à " << i << endl;
+		        		}
+	        		}
         			sleep(TimeOut);
         			// Si aprés TimeOut il ne répond pas T_Mon_Next on envoi Failure.
         			if(T_Mon_Next==-1) {
-        				write(voisins[last], "Failure" , MAX_SIZE);
-        				cout << "Message FAILURE envoyé à " << last << endl;
+        				for(int i=port; i<port+n; i++) {
+		    				if(voisins[i]!=-1 && i!=mon_port) {
+				    			write(voisins[i], "Failure" , MAX_SIZE);
+        						cout << "Message FAILURE envoyé à " << i << endl;
+				    		}
+			    		}
         				//si pas de réponse => recouvrement global
         				//sinon => recouvrement individuel
         			}
