@@ -64,13 +64,16 @@ int last=-1;
 int next=-1;
 //Pour savoir s'il possède le jeton
 bool avoirJeton;
-//TimeOut va nous servir pour la tolérance aux pannes
-int TimeOut = 2;
-
 // Si il reçoit le message "T_Mon_Next" il change cette variable
 // pour éviter d'envoyer un message "Failure" (voir main)
 int T_Mon_Next=-1;
-int JAI_JETON=-1;
+int Jai_Jeton=-1;
+
+//TimeOut va nous servir pour la tolérance aux pannes
+int TimeOut = 4;
+int TimeTmp = 0;
+
+
 
 ///////////////
 // FONCTIONS //
@@ -124,8 +127,10 @@ void traiterMessage() {
 			next=Emetteur;
 			last=Emetteur;
 			cout << "Token Request reçu, je le passe quand j'ai fini" << endl;
-			//Je TRAVAIL
-			sleep(5);
+			
+			//Je TRAVAIL UN PEU PLUS (pour tester la tolérance aux pannes)
+			sleep(2);
+				
 			write( voisins[next], "Token", MAX_SIZE );
 			avoirJeton=false;
 			cout << "Je n'ai plus le jeton, je l'ai passé à mon next" << endl;
@@ -154,6 +159,7 @@ void traiterMessage() {
 	// Alors l’arbre des last est réinitialisé et la file des next est supprimé.
 	// Tous les sites en attente de SC devront ensuite réémettre leur requete.
 	
+	// Si je reçoit "Consult", et que mon next désigne l'expéditeur, alors je réponds "T_Mon_Next"
 	if(m.str=="Consult") {
 		cout << "Message CONSULT reçu" << endl;
 		if(next==m.i) {
@@ -164,6 +170,19 @@ void traiterMessage() {
 	
 	if(m.str=="T_Mon_Next") {
 		T_Mon_Next=1;
+	}
+	
+	// Si je reçoit "FAILURE" et que j'ai le Jeton je répond "Jai_Jeton"
+	if(m.str=="Failure") {
+		cout << "Message Failure reçu" << endl;
+		if(avoirJeton) {
+			write(voisins[m.i], "Jai_Jeton", MAX_SIZE);
+			cout << "Jai_Jeton envoyé à " << m.i << endl;
+		}
+	}
+	
+	if(m.str=="Jai_Jeton") {
+		Jai_Jeton=1;
 	}
 }
 
@@ -283,6 +302,11 @@ void * connecterVoisins( void * s ) {
     return NULL;
 }
 
+void * FonctionTimeOut(void * s) {
+	sleep(TimeOut);
+	TimeTmp=TimeOut;
+	return NULL;
+}
 ////////////////
 // PRINCIPALE //
 ////////////////
@@ -343,41 +367,63 @@ int main ( int argc, char ** argv )
 				int entier = mon_port;
 				oss << chaine << entier;
         		write(voisins[last], (char*)(oss.str()).c_str() , MAX_SIZE);
-        		
         		// Si au bout d'un "TimeOut" on a pas le jeton, on envoi "Consult"
-        		sleep(TimeOut);
-        		if( !avoirJeton ) {
+        		
+        		// thread pour le timeOut car si on reçoit le jeton entre temps, on annule le recouvrement.
+				pthread_t IdTimeOut1;
+				TimeTmp=0;
+				pthread_create(&IdTimeOut1, NULL, FonctionTimeOut, (void *) NULL);
+				
+				// Temps qu'on a pas le jeton et que le TimeOut n'est pas écoulé => on attends
+				while(!avoirJeton && TimeTmp!=TimeOut) {continue;}
+				
+				// Si on a toujours pas le jeton et que le TimeOut est écoulé => envoi de Consult
+        		if( !avoirJeton && (TimeTmp==TimeOut)) {
+        			// on envoi à tous CONSULT
         			for(int i=port; i<port+n; i++) {
         				if(voisins[i]!=-1 && i!=mon_port) {
 		        			write(voisins[i], "Consult" , MAX_SIZE);
 		        			cout << "Message CONSULT envoyé à " << i << endl;
 		        		}
 	        		}
-        			sleep(TimeOut);
-        			// Si aprés TimeOut il ne répond pas T_Mon_Next on envoi Failure.
-        			if(T_Mon_Next == -1) {
+	        		
+        			// Si aprés un second TimeOut il ne répond pas T_Mon_Next on envoi Failure.
+        			pthread_t IdTimeOut2;
+        			TimeTmp=0;
+					pthread_create(&IdTimeOut2, NULL, FonctionTimeOut, (void *) NULL);
+				
+					// Temps qu'on a pas reçu T_Mon_Next et que le TimeOut n'est pas écoulé => on attends
+					while(T_Mon_Next==-1 && TimeTmp!=TimeOut) {continue;}
+				
+					// Si on a toujours pas reçu T_Mon_Next et que le TimeOut est écoulé => envoi de Failure
+        			if(T_Mon_Next==-1 && (TimeTmp==TimeOut)) {
+        				// On envoi à tous FAILURE
         				for(int i=port; i<port+n; i++) {
 		    				if(voisins[i]!=-1 && i!=mon_port) {
 				    			write(voisins[i], "Failure" , MAX_SIZE);
         						cout << "Message FAILURE envoyé à " << i << endl;
 				    		}
 			    		}
+			    		// Si aprés un troisieme TimeOut il ne répond pas Jai_Jeton => recouvrement global
+		    			pthread_t IdTimeOut3;
+		    			TimeTmp=0;
+						pthread_create(&IdTimeOut3, NULL, FonctionTimeOut, (void *) NULL);
+				
+						// Temps qu'on a pas reçu T_Mon_Next et que le TimeOut n'est pas écoulé => on attends
+						while(Jai_Jeton==-1 && TimeTmp!=TimeOut) {continue;}
 			    		//si pas de réponse => recouvrement global
-			    		if(JAI_JETON == -1) {
-			    		
+			    		if(Jai_Jeton == -1 && TimeTmp==TimeOut) {
+			    			cout << "recouvrement GLOBAL" << endl;
 			    		}
-        				//sinon => recouvrement individuel => On relance notre requête.
-        				
+			    		//sinon => recouvrement individuel => On relance notre requête.
+			    		else {
+			    			cout << "recouvrement Individuel" << endl;
+			    		}
         			}
-        			// sinon S'il répond T_Mon_Next c bon il continu d'attendre le jeton...
 	        	}
         	}
         }
     }
-
-    //à faire
-    //envoyer un message à tous mes voisins pour leur dire que
-    //je me ferme
 
 	//destruction du verrou
     cout << "-- On detruit le verrou." << endl;
