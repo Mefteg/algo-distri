@@ -1,0 +1,65 @@
+%author : Raimana Bouissou
+
+
+\documentclass[a4paper,12pt]{article}
+\usepackage[frenchb]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[pdftex]{graphicx}
+\usepackage{titlesec}
+
+
+\usepackage[pdftex,bookmarks,colorlinks]{hyperref}
+\hypersetup{colorlinks,%
+citecolor=black,%
+filecolor=black,%
+linkcolor=black,%
+urlcolor=black,%
+pdftex
+}
+
+% Raccourcis...
+\newcommand{\psubject}{Algorithme de Naimi-Tréhel et tolérance aux pannes}
+\newcommand{\nt}{Naimi-Tréhel }
+\newcommand{\tf}{Julien Sopena, Luciana Arantes, Martin Bertier, Pierre Sens }
+
+\title{\psubject}
+\author{Raimana BOUISSOU, Tom GIMENEZ, Léo JECPAS}
+
+
+\date{}
+\begin{document}
+
+\maketitle
+
+%Inclure un fichier tex par "section"
+\section{Introduction}
+\input{intro}
+
+\section{Algorithme de \nt}
+%\section{Fonctionnement de l'algorithme}
+%\section{Implémentation}
+\input{AlgoNaimiTrehel}
+
+\section{L'extension de \nt permettant la tolérance aux pannes}
+%\section{Explication du mécanisme}
+%\section{Implémentation}
+%\section{Atouts et inconvénients de cette extension}
+\input{extension1}
+
+\section{Amélioration de la tolérance aux pannes}
+%\section{Les différents mécanismes}
+%\section{Implémentation}
+\input{extension2}
+
+\section{L'algorithme de \nt sur des exemples}
+%\section{\nt sans extension}
+%\section{\nt avec extension}
+\input{exemples}
+
+\section{Conclusion}
+\input{conclusion}
+
+\end{document}
