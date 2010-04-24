@@ -80,7 +80,10 @@ int timeOut = 4;
 int timeTmp = 0;
 
 //Temps de travail
-int timeSC = 10;
+int timeSC = 15;
+
+int enSC=0;
+int cptSC=0;
 
 
 
@@ -100,8 +103,9 @@ int connexion( char * addr, int port ) {
 
     //on bind la socket
     int erreur = bind( sock, (struct sockaddr *) &site, sizeof(site));
-    if ( erreur < 0 )
+    if ( erreur < 0 ) {
         cerr << "xx Impossible de binder la socket" << endl;
+	}
 
     //on ecoute les connexions
     listen( sock, 5 );
@@ -127,11 +131,36 @@ void * FonctiontimeOut(void * s) {
 // Threadée => Permet de continuer à écouter/envoyer des messages pendant qu'il travail.
 // Càd répondre aux éventuel message CONSULT et FAILURE qu'il peut recevoir quand il est en SC.
 void * FonctionTimeSC(void * s) {
-	sleep(timeSC);
+	while(1) {
+		if(avoirJeton && cptSC == 0) {
+			cptSC++;
+			cout << "-- >> Je rentre en SC" << endl;
+			enSC=1;
+			sleep(timeSC); //temps de travail
+			enSC=0;
+			cout << "-- >> Je sors de la SC" << endl;
+		}
+		else {
+			sleep(1);
+		}
+	}
+	return NULL;
+}
+
+void * FonctionEnvoiJeton(void * s) {
+	int cpt=0;
+	while(enSC==1) {
+		if(cpt==0) {
+			cout << "-- >> Je suis toujours en SC" << endl;
+			cpt++;
+		}
+		sleep(1);
+		continue;
+	}
 	write( voisins[next], "Token", MAX_SIZE );
 	avoirJeton=false;
+	cptSC=0;
 	cout << "-- >> J'ai passé le jeton à mon next" << endl;
-	return NULL;
 }
 
 //traite le message et débloque son accès
@@ -154,13 +183,9 @@ void traiterMessage() {
 			// Je met à jour mon next à celui qui est noté dans le message "Token Request"
 			next=Emetteur;
 			last=Emetteur;
-			cout << "-- >> J'passe le jeton quand j'fini de travailler" << endl;
 			
-			// Threade qui représente le temps qu'il passe en SC,
-			// une fois sorti de la SC, il envoi le jeton a son next.
-			// Fonction threadée car il doit pouvoir écouter/envoyer des messages pendant qu'il travail.
-			pthread_t IdTimeSC;
-			pthread_create(&IdTimeSC, NULL, FonctionTimeSC, (void *) NULL);
+			pthread_t IdEnvoiJeton;
+			pthread_create(&IdEnvoiJeton, NULL, FonctionEnvoiJeton, (void *) NULL);			
 		}
 	}
 	
@@ -188,15 +213,15 @@ void traiterMessage() {
 	
 	// Si je reçoit "CONSULT", et que mon next désigne l'expéditeur, alors je réponds "T_MON_NEXT"
 	if(m.str=="Consult") {
-		//cout << "Message CONSULT reçu" << endl;
 		if(next==m.i) {
 			write(voisins[m.i], "T_MON_NEXT", MAX_SIZE);
 			cout << "-- -- Message T_MON_NEXT envoyé à " << m.i << endl;
 		}
 	}
 	
-	if(m.str=="T_MON_NEXT")
+	if(m.str=="T_MON_NEXT") {
 		T_MON_NEXT=1;
+	}
 	
 	// Si je reçoit "FAILURE" et que j'ai le Jeton je répond "JAI_JETON"
 	if(m.str=="Failure") {
@@ -207,8 +232,14 @@ void traiterMessage() {
 		}
 	}
 	
-	if(m.str=="JAI_JETON")
+	if(m.str=="JAI_JETON") {
 		JAI_JETON=1;
+	}
+		
+	if(m.str=="Elected") {
+		last=m.i;
+		next=-1;
+	}
 }
 
 
@@ -219,7 +250,6 @@ void * attendreMessage( void * s ) {
 	tmp.port = site->port;
 	tmp.socket = site->socket;
 	pthread_mutex_unlock( &verrouSite );
-    //cout << "-- -- J'attends des messages du site: " << tmp.port << endl;
 
     int continuer=1;
     //tant que la socket du site est opérationnelle
@@ -237,7 +267,6 @@ void * attendreMessage( void * s ) {
 		pthread_mutex_unlock( &verrouMsg );
     }
 
-    //cout << "J'ai fini d'attendre des messages du site: " << tmp.port << endl;
     //on enleve la socket comme ça le site peut se reconnecter
     voisins[tmp.port] = -1;
     return NULL;
@@ -258,7 +287,6 @@ void * accepterVoisins( void * s ) {
             //si je ne me suis pas encore connecté avec ce site
             if ( voisins[pr] < 0 ) {
                 voisins[pr] = res;
-                //cout << "-- Acceptation du site: " << pr << endl;
 				pthread_mutex_lock( &verrouSite );
                 struct Site s;
                 s.port = pr;
@@ -266,10 +294,6 @@ void * accepterVoisins( void * s ) {
                 pthread_t Id;
                 pthread_create(&Id, NULL, attendreMessage, (void *) &s);
             }
-            //sinon
-            //else {
-            //    cout << "-- Pas besoin de refaire une ACCEPTATION avec: " << pr << endl;
-            //}
         }
         //sinon
         else {
@@ -293,12 +317,10 @@ void * connecterVoisins( void * s ) {
             int res = connect( voisins[port+cpt], (struct sockaddr *) &neighbors, sizeof( sockaddr_in ) );
             //si la connexion s'est bien faite
             if ( res < 0 ) {
-                //cout << "xx Impossible de se connecter à ce voisin: " << port+cpt << endl;
                 voisins[port+cpt] = -1;
             }
             //sinon
             else {
-                //cout << "-- J'ai réussi à me connecter à ce voisin: " << port+cpt << endl;
                 string m;
                 stringstream p;
                 p << mon_port;
@@ -311,16 +333,8 @@ void * connecterVoisins( void * s ) {
                 //on lance un thread qui écoutera les messages de ce site
                 pthread_t Id;
                 pthread_create(&Id, NULL, attendreMessage, (void *) &s);
-
-                //on lui envoie un petit message
-                //m.clear();
-                //m.assign( "Hey Hey Hey! Salut!!" );
-                //write( voisins[port+cpt], (char *) m.c_str(), MAX_SIZE );
             }
         }
-        //else {
-        //    cout << "-- Pas besoin de refaire une CONNEXION avec: " << port+cpt << endl;
-        //}
     }
 
     return NULL;
@@ -358,6 +372,11 @@ int main ( int argc, char ** argv )
     //thread de demande de connexion
     pthread_t IdConnect;
     pthread_create(&IdConnect, NULL, connecterVoisins, (void *) NULL);
+    // Threade qui représente le temps qu'il passe en SC,
+	// une fois sorti de la SC, il envoi le jeton a son next.
+	// Fonction threadée car il doit pouvoir écouter/envoyer des messages pendant qu'il travail.
+	pthread_t IdTimeSC;
+	pthread_create(&IdTimeSC, NULL, FonctionTimeSC, (void *) NULL);
 
 	//Initialisation: Jeton, last, next ....
     if(mon_port==1988) {
@@ -394,7 +413,7 @@ int main ( int argc, char ** argv )
 				pthread_create(&IdtimeOut1, NULL, FonctiontimeOut, (void *) NULL);
 				
 				// Temps qu'on a pas le jeton et que le timeOut n'est pas écoulé => on attends
-				while(!avoirJeton && timeTmp!=1) {continue;}
+				while(!avoirJeton && timeTmp!=1) {sleep(1); continue;}
 				
 				// Si on a toujours pas le jeton et que le timeOut est écoulé => envoi de Consult
         		if( !avoirJeton && (timeTmp==1)) {
@@ -412,10 +431,10 @@ int main ( int argc, char ** argv )
 					pthread_create(&IdtimeOut2, NULL, FonctiontimeOut, (void *) NULL);
 				
 					// Temps qu'on a pas reçu T_MON_NEXT et que le timeOut n'est pas écoulé => on attends
-					while(T_MON_NEXT==-1 && timeTmp!=1) {continue;}
+					while(T_MON_NEXT==-1 && timeTmp==0) {sleep(1); continue;}
 				
 					// Si on a toujours pas reçu T_MON_NEXT et que le timeOut est écoulé => envoi de Failure
-        			if(T_MON_NEXT==-1 && (timeTmp==1)) {
+        			if(T_MON_NEXT==-1 && timeTmp==1) {
         				// On envoi à tous FAILURE
         				for(int i=port; i<port+n; i++) {
 		    				if(voisins[i]!=-1 && i!=mon_port) {
@@ -430,17 +449,25 @@ int main ( int argc, char ** argv )
 						pthread_create(&IdtimeOut3, NULL, FonctiontimeOut, (void *) NULL);
 				
 						// Temps qu'on a pas reçu T_MON_NEXT et que le timeOut n'est pas écoulé => on attends
-						while(JAI_JETON == -1 && timeTmp != 1) {continue;}
+						while(JAI_JETON == -1 && timeTmp != 1) {sleep(1); continue;}
 			    		//si pas de réponse => recouvrement global
 			    		if(JAI_JETON == -1 && timeTmp == 1) {
 			    			cout << "Recouvrement GLOBAL" << endl;
+			    			avoirJeton=1;
+			    			for(int i=port; i<port+n; i++) {
+								if(voisins[i]!=-1 && i!=mon_port) {
+									write(voisins[i], "Elected" , MAX_SIZE);
+								}
+							}
+							cout << "-- -- Message ELECTED envoyé en Broadcast" << endl;
 			    		}
 			    		//sinon => recouvrement individuel => On relance notre requête.
 			    		else {
 			    			cout << "Recouvrement Individuel" << endl;
 			    		}
         			}
-        			while(!avoirJeton) continue; //provisoire
+        			//Quand il a recu T_MON_NEXT il est rassuré et continue d'attendre le jeton.
+        			while(!avoirJeton) {sleep(1); continue;} //provisoire
 	        	}
         	}
         }
