@@ -87,9 +87,6 @@ int enSC=0;
 //Compteur pour qu'on ne passe qu'une seule fois dans la SC par jeton reçu
 int cptSC=0;
 
-//Pile des TokenRequests reçues
-vector<int> pileTR;
-
 //Indique si le jeton a déjà été régénéré par un autre site ( utile dans le cas du 
 //recouvrement global )
 int jetonDejaRegenere=0;
@@ -196,32 +193,6 @@ void traiterMessage() {
 			// Je met à jour mon next à celui qui est noté dans le message "Token Request"
 			next=Emetteur;
 			last=Emetteur;
-
-			//PENSER À AJOUTER UN VERROU
-
-			//Je construis le message de COMMIT avec les predecesseurs de l'emetteur
-			ostringstream oss;
-			oss << "Commit";
-			for ( int i=0; i<pileTR.size(); i++ ) {
-				//Si on est sur le dernier
-				if ( i == pileTR.size()-1 ) {
-					//on ne met pas de ; au bout
-					oss << pileTR.at(i);
-				}
-				//sinon
-				else {
-					//on met un ;
-					oss << pileTR.at(i) << ";";
-				}
-			}
-
-			//J'ajoute l'emetteur à ma pile de TokenRequests
-			pileTR.push_back(Emetteur);
-
-			//PENSER À LIBERER LE VERROU
-
-			//J'envoie le COMMIT à l'expediteur de la TokenRequest
-			write( voisins[Emetteur], (char *)((oss.str()).c_str()), MAX_SIZE );
 		}
 	}
 	
@@ -276,10 +247,6 @@ void traiterMessage() {
 		last=m.i;
 		next=-1;
 		jetonDejaRegenere=1;
-		cout << "J'ai reçu ELECTED!!!!" << endl;
-	}
-	
-	if(m.str=="Commit") {
 	}
 }
 
@@ -437,7 +404,7 @@ void envoiTokenRequest() {
 
 			//si pas de réponse au message FAILURE => recouvrement global
 			if(JAI_JETON == -1 ) {
-				cout << "Recouvrement GLOBAL" << endl;
+				cout << "-- -- Recouvrement GLOBAL" << endl;
 				if ( jetonDejaRegenere == 0 ) {
 					//Broadcast ELECTED
 					for(int i=port; i<port+n; i++) {
@@ -445,19 +412,20 @@ void envoiTokenRequest() {
 							write(voisins[i], "Elected" , MAX_SIZE);
 						}
 					}
+					cout << "-- -- Jeton régénéré" << endl;
 					avoirJeton=1;
 					cout << "-- -- Message ELECTED envoyé en Broadcast" << endl;
 				}
 				else {
 					cout << "-- -- J'arrête le recouvrement global: jeton déjà régénéré" << endl;
-					cout << "Recouvrement Individuel" << endl;
+					cout << "-- -- Recouvrement Individuel" << endl;
 					envoiTokenRequest();
 					//du coup, je fais un recouvrement individuel, cad renvoie de ma TokenRequest
 				}
 			}
 			//sinon => recouvrement individuel => On relance notre requête.
 			else {
-				cout << "Recouvrement Individuel" << endl;
+				cout << "-- -- Recouvrement Individuel" << endl;
 				envoiTokenRequest();
 			}
 		}
