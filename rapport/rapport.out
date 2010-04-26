@@ -1,15 +1,27 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}
-\BOOKMARK [1][-]{section.2}{Algorithme de Naimi-Tr\351hel }{}
-\BOOKMARK [2][-]{subsection.2.1}{Fonctionnement de l'algorithme}{section.2}
-\BOOKMARK [2][-]{subsection.2.2}{Impl\351mentation}{section.2}
-\BOOKMARK [1][-]{section.3}{L'extension de Naimi-Tr\351hel permettant la tol\351rance aux pannes}{}
-\BOOKMARK [2][-]{subsection.3.1}{Explication du m\351canisme}{section.3}
-\BOOKMARK [2][-]{subsection.3.2}{Impl\351mentation}{section.3}
-\BOOKMARK [2][-]{subsection.3.3}{Atouts et inconv\351nients de cette extension}{section.3}
-\BOOKMARK [1][-]{section.4}{Am\351lioration de la tol\351rance aux pannes}{}
-\BOOKMARK [2][-]{subsection.4.1}{Les diff\351rents m\351canismes}{section.4}
-\BOOKMARK [2][-]{subsection.4.2}{Impl\351mentation}{section.4}
-\BOOKMARK [1][-]{section.5}{L'algorithme de Naimi-Tr\351hel sur des exemples}{}
-\BOOKMARK [2][-]{subsection.5.1}{Naimi-Tr\351hel sans extension}{section.5}
-\BOOKMARK [2][-]{subsection.5.2}{Naimi-Tr\351hel avec extension}{section.5}
-\BOOKMARK [1][-]{section.6}{Conclusion}{}
+\BOOKMARK [1][-]{section.2}{Objectifs}{}
+\BOOKMARK [1][-]{section.3}{Les algorithmes \351tudi\351s}{}
+\BOOKMARK [2][-]{subsection.3.1}{Algorithme de Naimi-Tr\351hel }{section.3}
+\BOOKMARK [2][-]{subsection.3.2}{Fonctionnement de l'algorithme}{section.3}
+\BOOKMARK [2][-]{subsection.3.3}{Impl\351mentation}{section.3}
+\BOOKMARK [2][-]{subsection.3.4}{L'extension de Naimi-Tr\351hel permettant la tol\351rance aux pannes}{section.3}
+\BOOKMARK [2][-]{subsection.3.5}{Explication du m\351canisme}{section.3}
+\BOOKMARK [2][-]{subsection.3.6}{Impl\351mentation}{section.3}
+\BOOKMARK [2][-]{subsection.3.7}{Atouts et inconv\351nients de cette extension}{section.3}
+\BOOKMARK [2][-]{subsection.3.8}{Am\351lioration de la tol\351rance aux pannes}{section.3}
+\BOOKMARK [2][-]{subsection.3.9}{Les diff\351rents m\351canismes}{section.3}
+\BOOKMARK [2][-]{subsection.3.10}{Impl\351mentation}{section.3}
+\BOOKMARK [2][-]{subsection.3.11}{L'algorithme de Naimi-Tr\351hel sur des exemples}{section.3}
+\BOOKMARK [2][-]{subsection.3.12}{Naimi-Tr\351hel sans extension}{section.3}
+\BOOKMARK [2][-]{subsection.3.13}{Naimi-Tr\351hel avec extension}{section.3}
+\BOOKMARK [1][-]{section.4}{Le developpement}{}
+\BOOKMARK [2][-]{subsection.4.1}{Choix techniques}{section.4}
+\BOOKMARK [3][-]{subsubsection.4.1.1}{Le langage de programmation}{subsection.4.1}
+\BOOKMARK [3][-]{subsubsection.4.1.2}{L'architecture}{subsection.4.1}
+\BOOKMARK [2][-]{subsection.4.2}{L'impl\351mentation}{section.4}
+\BOOKMARK [3][-]{subsubsection.4.2.1}{L'impl\351mentation des messages}{subsection.4.2}
+\BOOKMARK [3][-]{subsubsection.4.2.2}{La ressource utilis\351e en Section Critique}{subsection.4.2}
+\BOOKMARK [3][-]{subsubsection.4.2.3}{Des variables globales pour plus de simplicit\351}{subsection.4.2}
+\BOOKMARK [1][-]{section.5}{Conclusion}{}
+\BOOKMARK [2][-]{subsection.5.1}{Bilan technique}{section.5}
+\BOOKMARK [2][-]{subsection.5.2}{Bilan personnel}{section.5}

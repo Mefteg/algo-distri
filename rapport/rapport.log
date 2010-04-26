@@ -1,11 +1,11 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=latex 2009.11.26)  21 APR 2010 10:25
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2010.1.4)  26 APR 2010 08:31
 entering extended mode
  %&-line parsing enabled.
 **rapport.tex
 (./rapport.tex
 LaTeX2e <2005/12/01>
 Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
+yphenation, basque, french, loaded.
 (/usr/share/texmf-texlive/tex/latex/base/article.cls
 Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
 (/usr/share/texmf-texlive/tex/latex/base/size12.clo
@@ -34,12 +34,6 @@ File: babel.def 2005/11/23 v3.8h Babel common definitions
 \babel@savecnt=\count87
 \U@D=\dimen103
 )
-
-Package babel Warning: No hyphenation patterns were loaded for
-(babel)                the language `French'
-(babel)                I will use the patterns loaded for \language=0 instead.
-
-\l@french = a dialect from \language0
 Package babel Info: Making : an active character on input line 219.
 Package babel Info: Making ; an active character on input line 220.
 Package babel Info: Making ! an active character on input line 221.
@@ -48,6 +42,7 @@ LaTeX Font Info:    Redeclaring font encoding T1 on input line 299.
 \parindentFFN=\dimen104
 \std@mcc=\count88
 \dec@mcc=\count89
+
 *************************************
 * Local config file frenchb.cfg used
 *
@@ -370,16 +365,20 @@ File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
 \Gin@req@height=\dimen114
 \Gin@req@width=\dimen115
 )
-
-! LaTeX Error: File `titlesec.sty' not found.
-
-Type X to quit or <RETURN> to proceed,
-or enter new name. (Default extension: sty)
-
-Enter file name: 
+(/usr/share/texmf-texlive/tex/latex/titlesec/titlesec.sty
+Package: titlesec 2005/01/22 v2.6 Sectioning titles
+\ttl@box=\box28
+\beforetitleunit=\skip46
+\aftertitleunit=\skip47
+\ttl@plus=\dimen116
+\ttl@minus=\dimen117
+\titlewidth=\dimen118
+\titlewidthlast=\dimen119
+\titlewidthfirst=\dimen120
+)
 (/usr/share/texmf-texlive/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2007/02/07 v6.75r Hypertext links for LaTeX
-\@linkdim=\dimen116
+\@linkdim=\dimen121
 \Hy@linkcounter=\count103
 \Hy@pagecounter=\count104
 
@@ -411,8 +410,8 @@ Package: url 2005/06/27  ver 3.2  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 2599.
 \Fld@menulength=\count105
-\Field@Width=\dimen117
-\Fld@charsize=\dimen118
+\Field@Width=\dimen122
+\Fld@charsize=\dimen123
 \Choice@toks=\toks23
 \Field@toks=\toks24
 Package hyperref Info: Hyper figures OFF on input line 3102.
@@ -429,36 +428,44 @@ Package hyperref Info: Link coloring ON on input line 3120.
 File: hpdftex.def 2007/02/07 v6.75r Hyperref driver for pdfTeX
 \Fld@listcount=\count109
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 21.
-
-
-Package hyperref Warning: Option `pdftex' has already been used,
-(hyperref)                setting the option has no effect on input line 21.
-
-(./rapport.aux)
+Package hyperref Info: Option `colorlinks' set `true' on input line 20.
+ (./rapport.aux)
 \openout1 = `rapport.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for T1/lmr/m/n on input line 33.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 33.
- (/usr/share/texmf/tex/latex/lm/t1lmr.fd
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/lmr/m/n on input line 32.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 32.
+
+(/usr/share/texmf/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2007/01/14 v1.3 Font defs for Latin Modern
 )
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Info: Redefining \dots on input line 33.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Info: Redefining \dots on input line 32.
 
-(/usr/share/texmf-texlive/tex/latex/graphics/color.sty
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count110
+\scratchdimen=\dimen124
+\scratchbox=\box29
+\nofMPsegments=\count111
+\nofMParguments=\count112
+\everyMPshowfont=\toks25
+\MPscratchCnt=\count113
+\MPscratchDim=\dimen125
+\MPnumerator=\count114
+\everyMPtoPDFconversion=\toks26
+) (/usr/share/texmf-texlive/tex/latex/graphics/color.sty
 Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
 
 (/etc/texmf/tex/latex/config/color.cfg
@@ -466,7 +473,7 @@ File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: pdftex.def on input line 130.
 )
-Package hyperref Info: Link coloring ON on input line 33.
+Package hyperref Info: Link coloring ON on input line 32.
 
 (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
@@ -474,45 +481,50 @@ Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
 (/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
 Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
 )
-\c@section@level=\count110
+\c@section@level=\count115
 )
-LaTeX Info: Redefining \ref on input line 33.
-LaTeX Info: Redefining \pageref on input line 33.
+LaTeX Info: Redefining \ref on input line 32.
+LaTeX Info: Redefining \pageref on input line 32.
  (./rapport.out)
 (./rapport.out)
 \@outlinefile=\write3
 \openout3 = `rapport.out'.
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 36.
+LaTeX Font Info:    Try loading font information for U+msa on input line 35.
  (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 36.
+LaTeX Font Info:    Try loading font information for U+msb on input line 35.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
-) (./intro.tex)
-(./AlgoNaimiTrehel.tex) (./extension1.tex) (./extension2.tex) (./exemples.tex)
-(./conclusion.tex) [1
+) (./intro.tex) [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-[2] (./rapport.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./AlgoNaimiTrehel.tex)
+Overfull \hbox (3.33203pt too wide) in paragraph at lines 73--73
+ |[]\T1/cmr/bx/n/14.4 L'extension de Naimi-Tréhel per-met-tant la to-lé-rance
+ []
+
+[2] (./extension1.tex) [3] (./extension2.tex) (./exemples.tex) [4]
+(./conclusion.tex) [5] (./rapport.aux) ) 
 Here is how much of TeX's memory you used:
- 4372 strings out of 95087
- 55538 string characters out of 1183277
- 113959 words of memory out of 1500000
- 7458 multiletter control sequences out of 10000+50000
- 11161 words of font info for 32 fonts, out of 1200000 for 2000
+ 4951 strings out of 95063
+ 63103 string characters out of 1182611
+ 125318 words of memory out of 1500000
+ 8016 multiletter control sequences out of 10000+50000
+ 12621 words of font info for 34 fonts, out of 1200000 for 2000
  28 hyphenation exceptions out of 8191
- 27i,6n,36p,232b,363s stack positions out of 5000i,500n,6000p,200000b,5000s
- </home/raimana/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecr
-m1200.600pk> </home/raimana/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1440.600
-pk> </home/raimana/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1728.600pk> </hom
-e/raimana/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1440.600pk> </home/raimana
-/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm2074.600pk>
-Output written on rapport.pdf (2 pages, 60077 bytes).
+ 27i,6n,29p,456b,367s stack positions out of 5000i,500n,6000p,200000b,5000s
+ </home/fragma/.texmf-var/fonts/pk/ljfo
+ur/jknappen/ec/ecti1200.600pk> </home/fragma/.texmf-var/fonts/pk/ljfour/jknappe
+n/ec/ecbx1200.600pk> </home/fragma/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1
+440.600pk> </home/fragma/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk>
+ </home/fragma/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1728.600pk> </home/fr
+agma/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1440.600pk> </home/fragma/.texm
+f-var/fonts/pk/ljfour/jknappen/ec/ecrm2074.600pk>
+Output written on rapport.pdf (5 pages, 108113 bytes).
 PDF statistics:
- 233 PDF objects out of 1000 (max. 8388607)
- 18 named destinations out of 1000 (max. 131072)
- 137 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 410 PDF objects out of 1000 (max. 8388607)
+ 40 named destinations out of 1000 (max. 131072)
+ 233 words of extra memory for PDF output out of 10000 (max. 10000000)
 
