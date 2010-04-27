@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <vector>
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
@@ -50,20 +51,29 @@ int voisins[port+n];
 struct message m;
 //La socket du programme
 int ma_sock;
-//Indique si le site doit s'arrêter ou continuer
-int continuer=1;
-//Pointeur sur le dernier détenteur probable/connu du jeton
-int last=-1;
-//Pointeur sur le site à qui je dois transmettre le jeton 
-int next=-1;
 //mutex pour le traitement des messages
 pthread_mutex_t verrouMsg = PTHREAD_MUTEX_INITIALIZER;
 //mutex pour l'ajout des sites
 pthread_mutex_t verrouSite = PTHREAD_MUTEX_INITIALIZER;
 
+//Indique si le site doit s'arrêter ou continuer
+int continuer=1;
+// Choix dans le menu proposé a l'utilisateur.
+int choix=-1;
 
+//Pointeur sur le dernier détenteur probable/connu du jeton
+int last=-1;
+//Pointeur sur le site à qui je dois transmettre le jeton 
+int next=-1;
 //Pour savoir s'il possède le jeton
 bool avoirJeton;
+
+//Temps de travail en SC
+int timeSC = 20;
+//Booleen pour savoir si on est en SC ou pas
+int enSC=0;
+//Compteur pour qu'on ne passe qu'une seule fois dans la SC par jeton reçu
+int cptSC=0;
 
 ///////////////
 // FONCTIONS //
@@ -81,12 +91,12 @@ int connexion( char * addr, int port ) {
 
     //on bind la socket
     int erreur = bind( sock, (struct sockaddr *) &site, sizeof(site));
-    if ( erreur < 0 )
+    if ( erreur < 0 ) {
         cerr << "xx Impossible de binder la socket" << endl;
+	}
 
     //on ecoute les connexions
     listen( sock, 5 );
-
     return sock;
 }
 
@@ -97,43 +107,80 @@ int envoyer( int voisin, char * message ) {
     write( voisin, m, taille );
 }
 
+void * FonctionEnvoiJeton(void * s) {
+	//tant que je n'ai pas de next
+	while(next==-1) {
+		//j'attends
+		sleep(1);
+		continue;
+	}
+	write( voisins[next], "Token", MAX_SIZE );
+	cout << "-- >> J'ai passé le jeton à mon next: " << next << endl;
+	avoirJeton=false;
+	next = -1;
+	cptSC=0;
+
+	return NULL;
+}
+
+// Fonction threadée qui va s'occuper de donner le jeton une fois le travail fini.
+// Threadée => Permet de continuer à écouter/envoyer des messages pendant qu'il travail.
+// Càd répondre aux éventuel message CONSULT et FAILURE qu'il peut recevoir quand il est en SC.
+void * FonctionTimeSC(void * s) {
+	while(1) {
+		if ( avoirJeton && cptSC == 0 ) {
+			cptSC++;
+			cout << "-- >> Je rentre en SC" << endl;
+			enSC=1;
+			sleep(timeSC); //temps de travail
+			enSC=0;
+			cout << "-- >> Je sors de la SC" << endl;
+
+			//j'attends d'avoir un next pour lui envoyer le jeton ( si j'en ai déjà un, l'envoi se fera directement )
+			pthread_t IdEnvoiJeton;
+			pthread_create(&IdEnvoiJeton, NULL, FonctionEnvoiJeton, (void *) NULL);			
+		}
+		else {
+			sleep(1);
+		}
+	}
+	return NULL;
+}
+
 //traite le message et débloque son accès
 void traiterMessage() {
 	//Pour l'Emetteur de la token Request
 	int Emetteur = -1;
-	//si c'est un token request, et que je suis pas la racine, je le passe a mon père et je modifi mon last au demandeur
-	//sinon si je suis la racine, je modifi mon next au demandeur.
+	// Si j'reçois un TOKEN REQUEST, et que je ne suis pas la racine (j'ai pas le jeton),
+	// => je le passe a mon last et je modifi mon last au demandeur
+	// sinon si j'ai le jeton, je modifie mon next au demandeur.
 	if((m.str).substr(0, 12) == "TokenRequest") {
-		Emetteur = atoi((char *)(((m.str).substr(12, 15)).c_str()));
-		if(avoirJeton==false) {
-			cout << "Token Request tranféré à mon père" << endl;
+		Emetteur = atoi((char *) (((m.str).substr(12, 15)).c_str()));
+		//si je ne suis pas la racine
+		if ( last != mon_port ) {
+			//je fais transferer le message par le biais de mon last
+			cout << "-- -- Token Request tranféré à mon last: " << last << endl;
 			//j'envoi a mon père
 			write( voisins[last], (char *)((m.str).c_str()), MAX_SIZE );
 			//je modifi mon last au demandeur (modifi mon arbre des last dynamiquement)
-			last=Emetteur;
+			last = Emetteur;
 		}
+		//sinon
 		else {
-			// Je met à jour mon next à celui qui est noté dans le message "Token Request"
-			next=Emetteur;
-			last=Emetteur;
-			cout << "Token Request reçu, je le passe quand j'ai fini" << endl;
-			//Je TRAVAIL
-			sleep(5);
-			write( voisins[next], "Token", MAX_SIZE );
-			avoirJeton=false;
-			cout << "Je n'ai plus le jeton, je l'ai passé à mon next" << endl;
+			next = Emetteur;
+			cout << "-- -- nouveau next: " << next << endl;
+			last = Emetteur;
 		}
+		cout << "-- -- nouveau last: " << last << endl;
 	}
 	
 	// Si je reçoit "Token", je peut mettre ma variable avoirJeton à vrai
 	// J'ai ainsi le droit d'accèder à la ressource à partir de ce moment là.
-	if(m.str=="Token") {
-		cout << "C'est bon j'ai le jeton." << endl;
-		last=mon_port;
+	if( m.str=="Token" ) {
+		cout << "-- -- C'est bon j'ai le jeton." << endl;
 		avoirJeton=true;
 	}
 }
-
 
 //attend le message d'un site ( fonction threadée )
 void * attendreMessage( void * s ) {
@@ -142,7 +189,6 @@ void * attendreMessage( void * s ) {
 	tmp.port = site->port;
 	tmp.socket = site->socket;
 	pthread_mutex_unlock( &verrouSite );
-    cout << "-- -- J'attends des messages du site: " << tmp.port << endl;
 
     int continuer=1;
     //tant que la socket du site est opérationnelle
@@ -152,7 +198,7 @@ void * attendreMessage( void * s ) {
         continuer = read( tmp.socket, mess, MAX_SIZE );
 		//on bloque l'accès au message global
 		pthread_mutex_lock( &verrouMsg );
-        cout << "-- -- Message de " << tmp.port << ": " << mess << endl;
+        cout << "-- -- Message de " << tmp.port << ": <" << mess << ">" << endl;
         m.str = mess;
         m.i = tmp.port;
 		traiterMessage();
@@ -160,7 +206,6 @@ void * attendreMessage( void * s ) {
 		pthread_mutex_unlock( &verrouMsg );
     }
 
-    cout << "J'ai fini d'attendre des messages du site: " << tmp.port << endl;
     //on enleve la socket comme ça le site peut se reconnecter
     voisins[tmp.port] = -1;
 
@@ -182,7 +227,6 @@ void * accepterVoisins( void * s ) {
             //si je ne me suis pas encore connecté avec ce site
             if ( voisins[pr] < 0 ) {
                 voisins[pr] = res;
-                cout << "-- Acceptation du site: " << pr << endl;
 				pthread_mutex_lock( &verrouSite );
                 struct Site s;
                 s.port = pr;
@@ -190,17 +234,8 @@ void * accepterVoisins( void * s ) {
                 pthread_t Id;
                 pthread_create(&Id, NULL, attendreMessage, (void *) &s);
             }
-            //sinon
-            else {
-                cout << "-- Pas besoin de refaire une ACCEPTATION avec: " << pr << endl;
-            }
-        }
-        //sinon
-        else {
-            cout << "xx Impossible d'accepter le client." << endl;
         }
     }
-
     return NULL;
 }
 
@@ -217,12 +252,10 @@ void * connecterVoisins( void * s ) {
             int res = connect( voisins[port+cpt], (struct sockaddr *) &neighbors, sizeof( sockaddr_in ) );
             //si la connexion s'est bien faite
             if ( res < 0 ) {
-                cout << "xx Impossible de se connecter à ce voisin: " << port+cpt << endl;
                 voisins[port+cpt] = -1;
             }
             //sinon
             else {
-                cout << "-- J'ai réussi à me connecter à ce voisin: " << port+cpt << endl;
                 string m;
                 stringstream p;
                 p << mon_port;
@@ -235,19 +268,21 @@ void * connecterVoisins( void * s ) {
                 //on lance un thread qui écoutera les messages de ce site
                 pthread_t Id;
                 pthread_create(&Id, NULL, attendreMessage, (void *) &s);
-
-                //on lui envoie un petit message
-                m.clear();
-                m.assign( "Hey Hey Hey! Salut!!" );
-                write( voisins[port+cpt], (char *) m.c_str(), MAX_SIZE );
             }
         }
-        else {
-            cout << "-- Pas besoin de refaire une CONNEXION avec: " << port+cpt << endl;
-        }
     }
-
     return NULL;
+}
+
+void envoiTokenRequest() {
+	ostringstream oss;
+	string chaine = "TokenRequest";
+	int entier = mon_port;
+	oss << chaine << entier;
+	write(voisins[last], (char*)(oss.str()).c_str() , MAX_SIZE);
+	cout << "-- -- Envoi de la TokenRequest à mon last: " << last << endl;
+	last = mon_port;
+	cout << "-- -- nouveau last: " << last << endl;
 }
 
 ////////////////
@@ -282,6 +317,11 @@ int main ( int argc, char ** argv )
     //thread de demande de connexion
     pthread_t IdConnect;
     pthread_create(&IdConnect, NULL, connecterVoisins, (void *) NULL);
+    // Threade qui représente le temps qu'il passe en SC,
+	// une fois sorti de la SC, il envoi le jeton a son next.
+	// Fonction threadée car il doit pouvoir écouter/envoyer des messages pendant qu'il travail.
+	pthread_t IdTimeSC;
+	pthread_create(&IdTimeSC, NULL, FonctionTimeSC, (void *) NULL);
 
 	//Initialisation: Jeton, last, next ....
     if(mon_port==1988) {
@@ -289,38 +329,37 @@ int main ( int argc, char ** argv )
     }
     else {
     	avoirJeton=false;
-    	last = 1988;
     }
+	last = 1988;
     
     //tant que le site est actif
-    while ( continuer != 0 ) {
-        //Taper 1 pour continuer, autre chose sinon ( genre 0 )
-        cout<<endl<<"***** Petit Menu *****"<<endl<<"0 - Quitter"<<endl<<"1 - Token Request"<<endl<<endl;
-        cin >> continuer;
+    while ( choix != 0 ) {
+        //Petit Menu!!
+	    cout<< endl << "***** Petit Menu *****"<<endl<<"0 - Quitter"<<endl<<"1 - Token Request"<<endl<<endl;
+	    cin >> choix;
         
         //Si il a demandé à avoir le jeton
-        if(continuer==1) {
+        if(choix==1) {
         	// S'il l'a deja on lui dit...
         	if( avoirJeton ) cout << "Tu as déjà le jeton !" <<endl;
         	// Sinon on envoi a son last un Token Request avec mon port comme indentifiant
-        	// l'identifiant servira surtout quand la Token Request sera tranféré
+        	// l'identifiant servira surtout quand la Token Request sera tranférée
         	else {
-        		ostringstream oss;
-				string chaine = "TokenRequest";
-				int entier = mon_port;
-				oss << chaine << entier;
-        		write(voisins[last], (char*)(oss.str()).c_str() , MAX_SIZE);
+        		envoiTokenRequest();
         	}
         }
     }
 
-    //à faire
-    //envoyer un message à tous mes voisins pour leur dire que
-    //je me ferme
-
 	//destruction du verrou
     cout << "-- On detruit le verrou." << endl;
 	pthread_mutex_destroy( &verrouMsg );
+
+	for(int i=port; i<port+n; i++) {
+		if(voisins[i]!=-1 && i!=mon_port) {
+			shutdown( voisins[i], SHUT_RDWR );
+			close( voisins[i] );
+		}
+	}
 
 	//on ferme la socket
     cout << "-- On ferme la socket." << endl;
