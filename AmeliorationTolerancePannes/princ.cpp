@@ -69,7 +69,7 @@ int next=-1;
 bool avoirJeton;
 
 //Temps de travail en SC
-int timeSC = 20;
+int timeSC = 30;
 //Booleen pour savoir si on est en SC ou pas
 int enSC=0;
 //Compteur pour qu'on ne passe qu'une seule fois dans la SC par jeton reçu
@@ -81,6 +81,12 @@ vector<int> pred;
 int pos = -1;
 //Nombre max de predecesseurs connus par un site
 int k=2;
+
+//indique si le plus proche predecesseur est vivant
+int pred_vivant;
+
+//Permet de savoir si j'ai reçu un <COMMIT> ou non
+int commit=0;
 
 ///////////////
 // FONCTIONS //
@@ -107,11 +113,18 @@ int connexion( char * addr, int port ) {
     return sock;
 }
 
-int envoyer( int voisin, char * message ) {
-    int taille=4;
-    char m[4];
-    strcpy( m, (char *) "aaaa" );
-    write( voisin, m, taille );
+int envoyer( int p, string message ) {
+    return write( voisins[p], message.c_str(), MAX_SIZE );
+}
+
+// Fonction threadée qui va actionner un timer pendant lequel
+// il devrait recevoir un message qu'il attends 
+void * FonctionTimeOut( void * s ) {
+	int timeOut = (long) s;
+	cout << "-- -- -- J'attends " << timeOut << " secondes..." << endl;
+	sleep(timeOut);
+
+	return NULL;
 }
 
 void * FonctionEnvoiJeton(void * s) {
@@ -207,6 +220,7 @@ void traiterMessage() {
 	// Si je reçoit "Token", je peut mettre ma variable avoirJeton à vrai
 	// J'ai ainsi le droit d'accèder à la ressource à partir de ce moment là.
 	if( m.str=="Token" ) {
+		pred.clear();
 		cout << "-- -- C'est bon j'ai le jeton." << endl;
 		avoirJeton=true;
 	}
@@ -238,6 +252,21 @@ void traiterMessage() {
 			cout << "|" << pred.at(i);
 			if(i==pred.size()-1) cout << endl;
 		}
+
+		//On a bien reçu un commit!
+		commit = 1;
+	}
+
+
+	//si j'ai reçu une demande de vivacité
+	if( m.str == "ARE_YOU_ALIVE" ) {
+		next = m.i;
+		envoyer( next, "I_AM_ALIVE" );
+	}
+
+	//si j'ai reçu une demande de vivacité
+	if( m.str == "I_AM_ALIVE" ) {
+		pred_vivant = m.i;
 	}
 }
 
@@ -333,7 +362,30 @@ void * connecterVoisins( void * s ) {
     return NULL;
 }
 
-void envoiTokenRequest() {
+void mecanisme12() {
+	int i=pred.size()-1;
+	int duree=3;
+	while ( pred_vivant == -1 ) {
+		envoyer( pred.at(i), "ARE_YOU_ALIVE" );
+		pthread_t IdTimeOut;
+		pthread_create(&IdTimeOut, NULL, FonctionTimeOut, (void *) duree);
+
+		pthread_join(IdTimeOut, NULL);
+		i--;
+	}
+
+	//si j'ai moins k pannes ( au moins un predecesseur de vivant )
+	if ( pred_vivant != -1 ) {
+		//Mécanisme 1 deja fait ( grâce à next = m.i dans la
+		//réception de ARE_YOU_ALIVE )
+	}
+	//sinon il y a plus de k pannes
+	else {
+		//Mécanisme 2
+	}
+}
+
+void * envoiTokenRequest( void * s ) {
 	ostringstream oss;
 	string chaine = "TokenRequest";
 	int entier = mon_port;
@@ -342,6 +394,45 @@ void envoiTokenRequest() {
 	cout << "-- -- Envoi de la TokenRequest à mon last: " << last << endl;
 	last = mon_port;
 	cout << "-- -- nouveau last: " << last << endl;
+
+	// Fonction threadée car il doit pouvoir écouter/envoyer des messages pendant qu'il travail.
+	int duree = 8;
+	pthread_t IdTimeOut;
+	pthread_create(&IdTimeOut, NULL, FonctionTimeOut, (void *) duree);
+
+	//on attends la fin du timer
+	pthread_join(IdTimeOut, NULL);
+
+	//si je n'ai pas reçu de <COMMIT> à la fin du compteur
+	if ( commit == 0 ) {
+		//Mécanisme 3
+		cout << "Mécanisme 3 -> pas de COMMIT reçu" << endl;
+	}
+	else {
+		//on réinitialise commit
+		commit = 0;
+		pred_vivant = 1;
+		duree = 5;
+		//tant que notre plus proche predecesseur est vivant et que j'ai toujours des predecesseurs
+		while ( pred_vivant > -1 && !pred.empty() ) {
+			envoyer( pred.at(pred.size()-1), "ARE_YOU_ALIVE" );
+			pred_vivant = -1;
+			// Fonction threadée car il doit pouvoir écouter/envoyer des messages pendant qu'il travail.
+			pthread_t IdTimeOut;
+			pthread_create(&IdTimeOut, NULL, FonctionTimeOut, (void *) duree);
+
+			pthread_join(IdTimeOut, NULL);
+		}
+
+		//si mon plus proche predecesseur est mort
+		if ( pred_vivant == -1 ) {
+			//Mecanisme 1 & 2
+			cout << "Mécanisme 1 & 2 -> pas de YEAH reçu" << endl;
+			mecanisme12();
+		}
+	}
+
+	return NULL;
 }
 
 ////////////////
@@ -405,7 +496,8 @@ int main ( int argc, char ** argv )
         	// Sinon on envoi a son last un Token Request avec mon port comme indentifiant
         	// l'identifiant servira surtout quand la Token Request sera tranférée
         	else {
-        		envoiTokenRequest();
+				pthread_t IdEnvoiTokenRequest;
+				pthread_create(&IdEnvoiTokenRequest, NULL, envoiTokenRequest, (void *) NULL);
         	}
         }
     }
