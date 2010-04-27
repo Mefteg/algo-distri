@@ -88,6 +88,9 @@ int pred_vivant;
 //Permet de savoir si j'ai reçu un <COMMIT> ou non
 int commit=0;
 
+int positionTmp=-1;
+int siteTmp=-1;
+
 ///////////////
 // FONCTIONS //
 ///////////////
@@ -238,7 +241,6 @@ void traiterMessage() {
 		// On récupére les prédécésseurs...
 		string ports = m.str.substr(ind+1+ind2+1, m.str.length());
 		
-		cout << "Prédécésseurs: ";
 		int ind3 = ports.find_first_of(";");
 		while( ind3 > 0 ) {
 			pred.push_back(atoi(ports.substr(0, ind3).c_str()));
@@ -247,9 +249,10 @@ void traiterMessage() {
 		}
 		pred.push_back(atoi(ports.substr(0, ports.length()).c_str()));
 		
+		cout << "Prédécésseurs: ";
 		//Affichage des prédécésseurs
 		for(int i=0; i<pred.size(); i++) {
-			cout << "|" << pred.at(i);
+			cout << " | " << pred.at(i);
 			if(i==pred.size()-1) cout << endl;
 		}
 
@@ -268,6 +271,50 @@ void traiterMessage() {
 	if( m.str == "I_AM_ALIVE" ) {
 		pred_vivant = m.i;
 	}
+
+	//si j'ai reçu une demande de vivacité
+	if ((m.str).substr(0, 11) == "SEARCH_PREV" ) {
+		int posEmetteur = atoi((char *) (((m.str).substr(11, m.str.length())).c_str()));
+		if ( posEmetteur > pos ) {
+			stringstream oss;
+			oss << "POSITION" << pos;
+			envoyer( m.i, oss.str() );
+		}
+	}
+
+	if ((m.str).substr(0, 8) == "POSITION" ) {
+		//position de l'emetteur dans le message
+		int posEmetteur = atoi((char *) (((m.str).substr(8, m.str.length())).c_str()));
+		//site de l'emetteur du message
+		int siteEmetteur = m.i;
+		//si la position temporaire est inférieure à celle reçue
+		if ( positionTmp < posEmetteur ) {
+			//je garde celle reçue
+			positionTmp = posEmetteur;
+			siteTmp = siteEmetteur;
+		}
+	}
+
+	//si j'ai reçu une demande de vivacité
+	if( m.str == "CONNEXION" ) {
+		//Je construis le message COMMIT avec les k prédécesseurs de l'émetteur
+		ostringstream oss;
+		oss << "Commit" << ";" << pos+1;
+
+		int i;
+		if(pred.size()==k){
+			i=1;
+		}else{
+			i=0;
+		}
+
+		for (i ; i<pred.size(); i++ ) {
+			oss << ";" << pred.at(i);
+		}
+		oss << ";" << mon_port;
+
+		envoyer( m.i, oss.str() );
+	}
 }
 
 //attend le message d'un site ( fonction threadée )
@@ -284,6 +331,9 @@ void * attendreMessage( void * s ) {
         char mess[MAX_SIZE];
         strcpy( mess, "" );
         continuer = read( tmp.socket, mess, MAX_SIZE );
+		if ( continuer < 0 ) {
+			break;
+		}
 		//on bloque l'accès au message global
 		pthread_mutex_lock( &verrouMsg );
         cout << "-- -- Message de " << tmp.port << ": <" << mess << ">" << endl;
@@ -365,7 +415,8 @@ void * connecterVoisins( void * s ) {
 void mecanisme12() {
 	int i=pred.size()-1;
 	int duree=3;
-	while ( pred_vivant == -1 ) {
+	while ( pred_vivant == -1 && i >= 0 ) {
+		cout << "pred.at(i) :" << pred.at(i) << endl;
 		envoyer( pred.at(i), "ARE_YOU_ALIVE" );
 		pthread_t IdTimeOut;
 		pthread_create(&IdTimeOut, NULL, FonctionTimeOut, (void *) duree);
@@ -378,10 +429,39 @@ void mecanisme12() {
 	if ( pred_vivant != -1 ) {
 		//Mécanisme 1 deja fait ( grâce à next = m.i dans la
 		//réception de ARE_YOU_ALIVE )
+		envoyer( pred_vivant, "CONNEXION" );
 	}
 	//sinon il y a plus de k pannes
 	else {
 		//Mécanisme 2
+		positionTmp = -1;
+		siteTmp = -1;
+		//broadcast <SEARCH_PREV>
+		stringstream oss;
+		oss << "SEARCH_PREV" << pos;
+		for ( int i=port; i<port+n; i++ ) {
+			if ( voisins[i] > -1 && i != mon_port ) {
+				envoyer( i, oss.str() );
+			}
+		}
+
+		duree = 6;
+		pthread_t IdTimeOut;
+		pthread_create(&IdTimeOut, NULL, FonctionTimeOut, (void *) duree);
+
+		pthread_join(IdTimeOut, NULL);
+
+		//si j'ai reçu au moins une position
+		if ( positionTmp > -1 ) {
+			//j'envoie une connexion au site qui à la plus grande position
+			envoyer( siteTmp, "CONNEXION" );
+		}
+		//si je n'ai reçu aucune réponse du broadcast
+		else {
+			avoirJeton = true;
+			pred.clear();
+			pos = 0;
+		}
 	}
 }
 
