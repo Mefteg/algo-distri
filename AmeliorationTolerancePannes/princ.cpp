@@ -90,6 +90,10 @@ int commit=0;
 
 int positionTmp=-1;
 int siteTmp=-1;
+int haveNextTmp=-1;
+
+//Indique le nombre de fois que le site est rentré en SC
+int nbSC=0;
 
 ///////////////
 // FONCTIONS //
@@ -154,6 +158,7 @@ void * FonctionTimeSC(void * s) {
 		if ( avoirJeton && cptSC == 0 ) {
 			cptSC++;
 			cout << "-- >> Je rentre en SC" << endl;
+			nbSC++;
 			enSC=1;
 			sleep(timeSC); //temps de travail
 			enSC=0;
@@ -297,6 +302,8 @@ void traiterMessage() {
 
 	//si j'ai reçu une demande de vivacité
 	if( m.str == "CONNEXION" ) {
+		//petit DOUTE
+		next = m.i;
 		//Je construis le message COMMIT avec les k prédécesseurs de l'émetteur
 		ostringstream oss;
 		oss << "Commit" << ";" << pos+1;
@@ -313,7 +320,40 @@ void traiterMessage() {
 		}
 		oss << ";" << mon_port;
 
-		envoyer( m.i, oss.str() );
+		envoyer( next, oss.str() );
+	}
+
+	if( m.str == "SEARCH_QUEUE" ) {
+		//si j'ai une position dans la file
+		if ( pos != -1 ) {
+			stringstream oss;
+			oss << "ACK_SEARCH_QUEUE" << pos << ";";
+			//si j'ai un next
+			if ( next != -1 ) {
+				//je dis que j'en ai un
+				oss << 1;
+			}
+			//sinon
+			else {
+				//je dis que je n'en ai pas
+				oss << 0;
+			}
+			envoyer( m.i, oss.str() );
+		}
+	}
+
+	if ((m.str).substr(0, 16) == "ACK_SEARCH_QUEUE" ) {
+		string posStr = m.str.substr(16; m.str.find_first_of(';'));
+		int posEmetteur = atoi(posStr.c_str());
+
+		int haveNext = atoi(m.str.substr(m.str.find_first_of(';')+1, m.str.length()).c_str());
+
+		if ( positionTmp < posEmetteur ) {
+			//je garde celle reçue
+			positionTmp = posEmetteur;
+			haveNextTmp = haveNext;
+			siteTmp = m.i;
+		}
 	}
 }
 
@@ -487,6 +527,41 @@ void * envoiTokenRequest( void * s ) {
 	if ( commit == 0 ) {
 		//Mécanisme 3
 		cout << "Mécanisme 3 -> pas de COMMIT reçu" << endl;
+
+		siteTmp = -1;
+
+		//broadcast <SEARCH_QUEUE>
+		for ( int i=port; i<port+n; i++ ) {
+			if ( voisins[i] > -1 && i != mon_port ) {
+				envoyer( i, "SEARCH_QUEUE" );
+			}
+		}
+
+		duree = 7;
+		pthread_t IdTimeOut;
+		pthread_create(&IdTimeOut, NULL, FonctionTimeOut, (void *) duree);	
+
+		pthread_join(IdTimeOut, NULL);
+
+		//Si au moins un site m'a repondu
+		if ( siteTmp > -1 ) {
+			//Si le site qui a la plus grande position n'a pas de next (i)
+			if ( haveNextTmp == 0 ) {
+				//on la thread pas car on est déjà dans un thread
+				envoiTokenRequest( NULL );
+			}
+			//sinon, il a un next qui est fail (ii)
+			else {
+				//donc je prends la place du next fail
+				envoyer( siteTmp, "CONNEXION" );
+			}
+		}
+		//sinon, personne n'a répondu (iii)
+		else {
+			//alors personne n'a le jeton et moi je le régénère pumpedup!
+			avoirJeton = true;
+			pos = 0;
+		}
 	}
 	else {
 		//on réinitialise commit
