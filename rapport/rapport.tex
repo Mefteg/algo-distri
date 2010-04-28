@@ -1,7 +1,5 @@
-%author : Raimana Bouissou
-
-
 \documentclass[a4paper,12pt]{article}
+
 \usepackage[frenchb]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -9,6 +7,10 @@
 \usepackage{amsmath}
 \usepackage[pdftex]{graphicx}
 \usepackage{titlesec}
+\usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{algorithm,algorithmic}
+
+
 
 
 \usepackage[pdftex,bookmarks,colorlinks]{hyperref}
@@ -23,6 +25,8 @@ urlcolor=black
 \newcommand{\psubject}{Algorithme de Naimi-Tréhel et tolérance aux pannes}
 \newcommand{\nt}{Naimi-Tréhel }
 \newcommand{\tf}{Julien Sopena, Luciana Arantes, Martin Bertier, Pierre Sens }
+\newcommand{\last}{\textit{last} }
+\newcommand{\next}{\textit{next} }
 
 \title{\psubject}
 \author{Raimana BOUISSOU, Tom GIMENEZ, Léo RIZZON}
@@ -40,7 +44,7 @@ urlcolor=black
 
 Dans le cadre de notre unité d'enseignement intitulée Algorithmie Distribuée nous avons réalisé un projet qui consiste en l'implémentation d'une amélioration du modèle de tolérance de l'algorithme de \nt.
 
-Nous nous sommes basés sur un article co-écrit par Julien Sopena, Luciana Arantes, et Pierre Sens qui propose un algorithme d'exclusion mutuelle, tolérant aux fautes. Basé sur l'algorithme de \nt, il apporte une nette amélioration du coût de recouvrement en terme de message.
+Nous nous sommes basés sur un article co-écrit par Julien Sopena, Luciana Arantes, et Pierre Sens qui propose un algorithme d'exclusion mutuelle, tolérant aux fautes. Basé sur l'algorithme de \nt, il apporte une nette amélioration du coût de recouvrement en terme de messages.
 
 \input{intro}
 
@@ -52,7 +56,7 @@ D'autre part, l'implémentation de ces modèles pour appliquer toute la théorie
 
 Notons également que l'étude s'est faite à partir d'un article en anglais, comme la majorité des articles scientifiques, ce qui constitue une expérience intéressante.
 
-L'implémentation consiste donc en l'application de l'algorithme de Naimi-Tréhel à un certain nombre de sites, en réseaux, qui cherchent à acceder à une même ressource alors qu'il n'y qu'un accès possible à la fois.
+L'implémentation consiste donc en l'application de l'algorithme de \nt à un certain nombre de sites, en réseaux, qui cherchent à acceder à une même ressource alors qu'il n'y qu'un accès possible à la fois.
 
 \section{Les algorithmes étudiés}
 Cette partie nous servira à apporter une explication, avec nos propres mots et exemples, des algorithmes que nous avons étudiés.
@@ -63,12 +67,67 @@ L'algorithme de \nt est un modèle permettant à plusieurs sites de fonctionner 
 
 \paragraph{Fonctionnement de l'algorithme}
 
-Le fonctionnement général repose sur la construction dynamique de deux arbres. Aucun site n'a de vue globale de ces arbres et ne connait alors que son \textit{last}, dernier possesseur connu du jeton par ce site et son \textit{next} à qui ce site doit passé le jeton une fois sorti de S.C.
+Le fonctionnement général repose sur la construction dynamique de deux arbres. Aucun site n'a de vue globale de ces arbres et ne connait alors que son \last, dernier possesseur connu du jeton par ce site et son \next à qui ce site doit passé le jeton une fois sorti de S.C.
 
 Ainsi, le cas écheant, un site sait vers qui demandé le jeton et vers qui le transmettre une fois terminé.
 
+A l'initialisation un site possède le jeton et tous les autres ont leur \last qui pointe vers lui. On peut arriver à cet état par un système d'élection par exemple mais nous avons choisi de le faire à la main dans notre configuration, plus petite.
+
+Lorsqu'un site fait une demande de jeton, il l'envoie systématiquement à son \last. La demande va alors transiter dans l'arbre des \last jusqu'à arriver à la racine. A chaque fois, le site relai va faire pointer son \last sur le site demandeur (en effet, c'est celui-çi qui aura le jeton en dernier). La racine va alors faire pointer son \next vers le site demandeur.
+
+Notons que pour éviter une corruption de l'arbre on empêche le site possédant déja le jeton de faire une nouvelle demande. En effet on risquerait un écrasement de l'ancien \next si une nouvelle requête venait au possesseur du jeton.
+
+
 \paragraph{Implémentation}
-\input{AlgoNaimiTrehel}
+Ecrire l'algo en pseudo langage
+
+\begin{algorithm}[t]
+\caption{Initialisation}
+\label{algo_naimi_trehel_init}
+\begin{algorithmic}[1]
+\REQUIRE élection d'un site pour génèrer le jeton
+\STATE \last = identifiant$_{siteElu}$
+\STATE \next = $\emptyset$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Envoi par i de $<$TOKEN$>$}
+\label{algo_naimi_trehel_envoi_token}
+\begin{algorithmic}[1]
+\STATE \next = $\emptyset$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Reception par i de $<$TOKEN\_REQUEST, j$>$}
+\label{algo_naimi_trehel}
+\begin{algorithmic}[1]
+
+\IF {\last$_{i}$ $\ne$ i}
+\STATE envoyer($<$TOKEN\_REQUEST,j$>$) à \last 
+\STATE \last = j
+\ELSE
+\STATE \next = j
+\STATE \last = j
+\STATE Attendre fin S.C.
+\STATE envoyer($<$TOKEN$>$) à \next
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Envoi par i de $<$TOKEN\_REQUEST, i$>$}
+\label{algo_naimi_trehel_envoi_TK}
+\begin{algorithmic}[1]
+\STATE envoyer($<$TOKEN\_REQUEST, i$>$) à \last
+\STATE \last = i
+\end{algorithmic}
+\end{algorithm}
+
+
+
+%\input{AlgoNaimiTrehel}
 
 \subsection{L'extension de \nt permettant la tolérance aux pannes}
 
@@ -76,30 +135,115 @@ Dans sa version la plus simple, l'algorithme de \nt n'assure pas la tolérance a
 
 \paragraph{Explication du mécanisme}
 
-Dans des conditions réelles d'utilisation il existe toujours un risque de panne sur un ou plusieurs sites. Les modèles utilisant le principe du jeton posent de plus le problème de la perte de celui-çi. De plus, dans notre cas, la construction d'arbres virtuels dépourvue de vision globale engendre le risque de perversion complète de l'organisation des sites.
+Dans des conditions réelles d'utilisation il existe toujours un risque de panne sur un ou plusieurs sites. Les modèles utilisant le principe du jeton posent de plus le problème de la perte de celui-çi. Enfin, dans notre cas, la construction d'arbres virtuels dépourvue de vision globale engendre le risque de perversion complète de l'organisation des sites.
 
 Ici, on utilisera, pour détecter une faute, un timeout. Il s'agit d'un timer que l'on considère comme étant un temps raisonnable d'attente avant de suspecter un problème. Notons que ce timeout est à adapter à la configuration : temps de transfert des messages, nombre de sites, temps de S.C..
-Lors de la demande du jeton, un site attendra un certain timeout avant de lancer une procédure de vérification de défaillance. Ainsi il envoie un message spécifique à tous les autres sites afin de vérifier si son prédecesseur dans la file des \textit{next}(alors inconnu) est opérationnel. Il attend alors à nouveau un certain timeout car si c'est bien son prédecesseur qui est crashé, il ne recevra pas de réponse.
-Dans le cas d'une réponse, ce site n'a alors plus de questions à se poser et ne changer rien, on déduit en effet, s'il existe bien une panne, que c'est son prédecesseur fera alors le travail nécéssaire. 
-Dans le cas d'absence de réponse on peut avoir deux cas de figure. En effet, dans le pire des cas c'est le site possédant le jeton qui a eu une panne. Le jeton est alors perdu et ne peut être regeneré n'importe comment.
-Un nouveau message spécfique est alors envoyé à l'intention du possesseur du jeton. Si celui-çi répond, le site questionneur refera alors simplement sa demande de jeton pour palier à une éventuelle perte de message lors de la première.
-Par contre si celui-çi ne répond pas, un réinitialisation globale très coûteuse est effectuée. Une élection a lieu pour regeneré un jeton unique et toute l'organisation est perdue est doit être refaite. Toutes les demandes doivent être effectuée de nouveau.
+
+Lors de la demande du jeton, un site attendra un certain timeout avant de lancer une procédure de vérification de défaillance. Ainsi il envoie un message spécifique $<$CONSULT$>$ à tous les autres sites afin de vérifier si son prédecesseur dans la file des \next (alors inconnu) est opérationnel. Il attend alors à nouveau un certain timeout car si c'est bien son prédecesseur qui est tombé, il ne recevra pas de réponse.
+Dans le cas d'une réponse, ce site n'a alors plus de questions à se poser et ne changera rien, on déduit en effet, s'il existe bien une panne, que c'est son prédecesseur fera alors le travail nécéssaire. 
+
+Dans le cas d'absence de réponse on peut avoir deux cas de figure. En effet, il est possible que ce soit le site possédant le jeton qui a eu une panne. Le jeton est alors perdu et ne peut être régèneré n'importe comment.
+
+Le site suspectant une panne envoie un nouveau message spécfique, <FAILURE>, en broadcast, à l'intention du possesseur du jeton. Si celui-çi répond, le site questionneur refera alors simplement sa demande de jeton pour palier à une éventuelle perte de message lors de la première demande.
+
+Par contre si celui-çi ne répond pas, un réinitialisation globale très coûteuse est effectuée. Un message est alors envoyé à tous pour vérifier si il ni y'a pas d'autres sites qui envisagent de créer un nouveau jeton. Si il y a concurrence, le site au plus petit identifiant génère un jeton, unique, mais toute l'organisation est perdue est doit être refaite. Toutes les demandes doivent être effectuées de nouveau.
  
 \paragraph{Implémentation}
+
+Ecrire l'algo en pseudo langage
+
+\begin{algorithm}[t]
+\caption{Demande de jeton par i}
+\label{algo_naimi_trehel_ext_TK}
+\begin{algorithmic}[1]
+
+\STATE envoyer($<$TOKEN\_REQUEST$>$) et armer le Timer
+\IF{fin du Timer $\land$ pas reçu le TOKEN}
+  \STATE broadcast($<$CONSULT$>$)
+  \IF{pas de réponse au message $<$CONSULT$>$}
+    \STATE broadcast($<$FAILURE$>$)
+    \IF{réponse du possesseur du jeton}
+      \STATE envoyer($<$TOKEN\_REQUEST$>$) au site qui a répondu
+    \ELSE
+      \STATE broadcast($<$ELECTION$>$)
+      \IF {si aucune réponse ou si je n'ai pas abandonné}
+	\STATE régèneration du jeton
+      \ENDIF
+    \ENDIF
+  \ENDIF
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Reception par i de $<$CONSULT$>$}
+\label{algo_naimi_trehel_ext_Consult}
+\begin{algorithmic}[1]
+\IF{\next$_{i}$ $=$ i}
+\STATE envoyer($<$T\_MON\_NEXT$>$) à emetteur 
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Reception par i de $<$FAILURE$>$}
+\label{algo_naimi_trehel_ext_Failure}
+\begin{algorithmic}[1]
+\IF{j'ai le jeton}
+\STATE envoyer($<$J\_AI\_JETON$>$) à emetteur
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Reception par i de $<$ELECTION$>$}
+\label{algo_naimi_trehel_ext_Election}
+\begin{algorithmic}[1]
+\IF{je cherche déja à régènerer le jeton}
+  \IF{identifiant$_{i}$ > identidiant$_{emetteur}$}
+  \STATE abandon de la procédure de régèneration
+  \ENDIF
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
 \paragraph{Atouts et inconvénients de cette extension}
 Cette extension répond de manière sûre au problème de pannes. Néanmoins dans le cas de la perte du jeton on a affaire à une réinitialisation complète particulièrement peu efficace et coûteuse. Pire encore, on peut arriver à des coûts encore plus élevés dans certain cas où le jeton n'est pas perdu : on constate alors des procédures de recouvrement individuel cooncurentes.
 
 \input{extension1}
 
-\subsection{Amélioration de la tolérance aux pannes}
-Nous avons vu que, malgré qu'elle soit efficace, l'extension de l'algorithme de \nt n'est pas efficiente. C'est dans une optique d'amélioration de ce système que l'algorithme équitable tolérant aux fautes à été imaginé.
+\subsection{Amélioration de l'aogorithme de tolérance aux pannes}
+Nous avons vu que, malgré qu'elle parvienne au résultat escompté, l'extension de l'algorithme de \nt coûte cher. C'est dans une optique d'amélioration de ce système que l'algorithme équitable tolérant aux fautes à été imaginé.
+
+On va chercher à conserver l'ordre initial des requêtes de demande de jeton en récupérant les morceaux non corrompus de la file des \next. Si la reconstruction n'est pas possible une nouvelle file des \next et un nouvel arbre des \last seront créés.
 
 \paragraph{Les différents mécanismes}
-Tout d'abord les sites possèdent désormais plus d'informations que dans l'algorithme précédant. Ils connaissent leur position dans la file de \textit{next} mais également un certain nombre de leur prédecesseur. On voit une réponse directe aux problèmes posés par l'algorithme précedant. Là où un broadcast était nécessaire pour trouver son prédecesseur avant, aucun message n'est utile ici! 
+Tout d'abord les sites possèdent désormais plus d'informations que dans l'algorithme précédent. Ils connaissent leur position dans la file des \next (3e après le possesseur actuel du jeton par exemple) et également un certain nombre de leurs prédecesseurs. On voit une réponse directe aux problèmes posés par l'algorithme précedant. Là où un broadcast était nécessaire pour trouver son prédecesseur avant, aucun message n'est utile ici! 
+
+Paradoxalement, on va ajouter un certain nombre de messages pour en économiser si une panne survient.
+
+En effet, un message $<$COMMIT$>$ sera envoyé en réponse, par la racine de l'arbre des \last, à chaque $<$TOKEN REQUEST$>$ qui lui parvient. Il peut ainsi, avec ce $<$COMMIT$>$ mettre à jour la liste des prédecesseurs du site demandeur, en s'incluant dedans, tout en confirmant la réception de sa demande et en envoyant sa position dans la file des \next.
+
+Après avoir reçu le message $<$COMMIT$>$, le site demandeur va régulièrement tester la validité de son plus proche prédecesseur, assurant une réactivité face à une éventuelle panne.
+
+
+Lors d'une détection de panne par un site, on distingue trois grands mécanismes répondant à des cas de figure différents : 
+Mécanisme 1 (M1) : Le site a reçu un message $<$COMMIT$>$ et il y a moins de panne consecutives dans la file des \next que de prédecesseurs connus par ce site. 
+Mécanisme 2 (M2) : Le site a reçu un message $<$COMMIT$>$ et il y a plus de panne consecutives dans la file des \next que de prédecesseurs connus par ce site.
+Mécanisme 3 (M3) : Le site n'a pas reçu de message $<$COMMIT$>$
+
+Détaillons un peu ces mécanismes.
+Mécanisme M1 : Le site va envoyer à ces prédecesseurs, du plus proche au plus éloigné, un message $<$ARE\_YOU\_ALIVE$>$. On attend une réponse qui sera celle du premier site opérationnel avant le site en question. Ce site, qui répond un message $<$I\_AM\_ALIVE$>$ , prendra comme \next le site questionneur. La file des \next est ainsi reconstruite en conservant son ordre.
+Mécanisme M2 : On n'a pas de réponse au message $<$ARE\_YOU\_ALIVE$>$ ici. Tous les sites connus comme prédecesseurs sont défaillants. Le site va alors chercher à se raccorder avec un morceau de la file des \next valide. Il envoie un message $<$SEARCH\_PREV$>$, qui contient sa position dans la file, à tout le monde.
+Seuls les sites étant plus proche du possesseur du jeton doivent répondre et le site va alors choisir parmis ceux-çi celui qui a la position la pls grande (donc le plus éloigné du possesseur du jeton) pour qu'il devienne son plus proche prédecesseur. Un message $<$CONNECTION$>$ informera le site concerné de la manoeuvre de reconnexion
+Par contre, si le site ne recoit aucune réponse à sa diffusion de $<$SEARCH\_PREV$>$, il en déduira qu'il n'a aucun prédecesseur, donc que le jeton est perdu. Il peut alors en régeneré un.
+Mécanisme M3 : df
+
+
+
 
 \paragraph{Implémentation}
 \input{extension2}
-
 \subsection{L'algorithme de \nt sur des exemples}
 %\section{\nt sans extension}
 %\section{\nt avec extension}
