@@ -100,6 +100,12 @@ int nbSC=0;
 //Indique si je dois envoyer la tokenRequest à mon last ou à site
 int siteRequestPrioritaire=-1;
 
+//Indique quand un nouveau TokenRequest doit être envoyé
+int nouveauTR=0;
+
+//Indique si je dois abandonner le mécanisme 3
+int abandonSQ = 0;
+
 void * envoiTokenRequest( void * s );
 void mecanisme12();
 
@@ -132,11 +138,27 @@ int envoyer( int p, string message ) {
     return write( voisins[p], message.c_str(), MAX_SIZE );
 }
 
+//Permet de lancer en thread une tokenRequest
+void * FonctionNouveauTokenRequest( void * s ) {
+	while ( 1 ) {
+		if ( nouveauTR == 1 ) {
+			pthread_t IdNouveauTK;
+			pthread_create(&IdNouveauTK, NULL, envoiTokenRequest, (void *) NULL);			
+			nouveauTR = 0;
+		}
+		else {
+			sleep(1);
+		}
+	}
+
+	return NULL;
+}
+
 // Fonction threadée qui va actionner un timer pendant lequel
 // il devrait recevoir un message qu'il attends 
 void * FonctionTimeOut( void * s ) {
 	int timeOut = (long) s;
-	cout << "-- -- -- J'attends " << timeOut << " secondes..." << endl;
+	cout << ".. .. .. J'attends " << timeOut << " secondes..." << endl;
 	sleep(timeOut);
 
 	return NULL;
@@ -230,6 +252,7 @@ void traiterMessage() {
 
 			//J'envoie le COMMIT à l'expediteur de la TokenRequest
 			write( voisins[Emetteur], (char *)((oss.str()).c_str()), MAX_SIZE );
+			cout << "-- -- COMMIT envoyé à: " << Emetteur << endl;
 		}
 		cout << "-- -- nouveau last: " << last << endl;
 	}
@@ -342,9 +365,12 @@ void traiterMessage() {
 			//OU s'il est egal et qu'il a un plus grand identifiant que le mien
 			if ( nbSCEmetteur < nbSC || ( nbSCEmetteur == nbSC && m.i > mon_port ) ) {
 				dejaSQ=0;
+				siteRequestPrioritaire = m.i;
+				cout << "-- -- -- J'abandonne le mécanisme 3" << endl;
+				abandonSQ = 1;
 				//j'abandonne la procédure de recouvrement
 				//et je lance un TokenRequest à l'emetteur
-				envoiTokenRequest( NULL );
+				nouveauTR = 1;
 			}
 		}
 		//sinon, je n'ai pas fait de broadcast SEARCH_QUEUE
@@ -552,6 +578,7 @@ void mecanisme12() {
 		//si je n'ai reçu aucune réponse du broadcast
 		else {
 			avoirJeton = true;
+			cout << "-- -- -- Je régénère le jeton" << endl;
 			pred.clear();
 			pos = 0;
 		}
@@ -567,13 +594,14 @@ void * envoiTokenRequest( void * s ) {
 	//si je dois l'envoyer à un autre que mon last
 	if ( siteRequestPrioritaire > -1 ) {
 		write(voisins[siteRequestPrioritaire], (char*)(oss.str()).c_str() , MAX_SIZE);
+		cout << "-- -- Envoi de la TokenRequest à mon siteRequestPrioritaire: " << siteRequestPrioritaire << endl;
 	}
 	else {
 		write(voisins[last], (char*)(oss.str()).c_str() , MAX_SIZE);
+		cout << "-- -- Envoi de la TokenRequest à mon last: " << last << endl;
 	}
 
 	siteRequestPrioritaire = -1;
-	cout << "-- -- Envoi de la TokenRequest à mon last: " << last << endl;
 	last = mon_port;
 	cout << "-- -- nouveau last: " << last << endl;
 
@@ -591,6 +619,7 @@ void * envoiTokenRequest( void * s ) {
 		cout << "Mécanisme 3 -> pas de COMMIT reçu" << endl;
 
 		siteTmp = -1;
+		abandonSQ = 0;
 
 		dejaSQ=1;
 		//broadcast <SEARCH_QUEUE>
@@ -609,26 +638,30 @@ void * envoiTokenRequest( void * s ) {
 
 		pthread_join(IdTimeOut, NULL);
 
-		dejaSQ=0;
-		//Si au moins un site m'a repondu
-		if ( siteTmp > -1 ) {
-			//Si le site qui a la plus grande position n'a pas de next (i)
-			if ( haveNextTmp == 0 ) {
-				siteRequestPrioritaire = siteTmp;
-				//on la thread pas car on est déjà dans un thread
-				envoiTokenRequest( NULL );
+		//si je n'ai eu à abandonner
+		if ( abandonSQ == 0 ) {
+			dejaSQ=0;
+			//Si au moins un site m'a répondu
+			if ( siteTmp > -1 ) {
+				//Si le site qui a la plus grande position n'a pas de next (i)
+				if ( haveNextTmp == 0 ) {
+					cout << "-- -- -- Le site qui a la plus grande position n'a pas de next" << endl;
+					siteRequestPrioritaire = siteTmp;
+					//on la thread pas car on est déjà dans un thread
+					nouveauTR = 1;
+				}
+				//sinon, il a un next qui est fail (ii)
+				else {
+					//donc je prends la place du next fail
+					envoyer( siteTmp, "CONNEXION" );
+				}
 			}
-			//sinon, il a un next qui est fail (ii)
+			//sinon, personne n'a répondu (iii)
 			else {
-				//donc je prends la place du next fail
-				envoyer( siteTmp, "CONNEXION" );
+				//alors personne n'a le jeton et moi je le régénère pumpedup!
+				avoirJeton = true;
+				pos = 0;
 			}
-		}
-		//sinon, personne n'a répondu (iii)
-		else {
-			//alors personne n'a le jeton et moi je le régénère pumpedup!
-			avoirJeton = true;
-			pos = 0;
 		}
 	}
 	else {
@@ -677,6 +710,9 @@ int main ( int argc, char ** argv )
 	pthread_t IdTimeSC;
 	pthread_create(&IdTimeSC, NULL, FonctionTimeSC, (void *) NULL);
 
+	pthread_t IdTR;
+	pthread_create(&IdTR, NULL, FonctionNouveauTokenRequest, (void *) NULL);
+
 	//Initialisation: Jeton, last, next ....
     if(mon_port==port) {
     	avoirJeton=true;
@@ -702,8 +738,7 @@ int main ( int argc, char ** argv )
         	// Sinon on envoi a son last un Token Request avec mon port comme indentifiant
         	// l'identifiant servira surtout quand la Token Request sera tranférée
         	else {
-				pthread_t IdEnvoiTokenRequest;
-				pthread_create(&IdEnvoiTokenRequest, NULL, envoiTokenRequest, (void *) NULL);
+				nouveauTR = 1;
         	}
         }
 
