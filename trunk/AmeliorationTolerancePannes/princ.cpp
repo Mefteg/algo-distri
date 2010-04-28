@@ -34,7 +34,7 @@ struct message {
 //Nombre de sites
 const int n=5;
 //Commencer l'inclusion dans le tableau des voisins par cette valeur
-const int port=1988;
+const int port=2001;
 //Le numéro de port du site
 int mon_port;
 //taille maximale des messages
@@ -69,7 +69,7 @@ int next=-1;
 bool avoirJeton;
 
 //Temps de travail en SC
-int timeSC = 30;
+int timeSC = 20;
 //Booleen pour savoir si on est en SC ou pas
 int enSC=0;
 //Compteur pour qu'on ne passe qu'une seule fois dans la SC par jeton reçu
@@ -92,8 +92,16 @@ int positionTmp=-1;
 int siteTmp=-1;
 int haveNextTmp=-1;
 
+int dejaSQ=0;
+
 //Indique le nombre de fois que le site est rentré en SC
 int nbSC=0;
+
+//Indique si je dois envoyer la tokenRequest à mon last ou à site
+int siteRequestPrioritaire=-1;
+
+void * envoiTokenRequest( void * s );
+void mecanisme12();
 
 ///////////////
 // FONCTIONS //
@@ -145,6 +153,7 @@ void * FonctionEnvoiJeton(void * s) {
 	cout << "-- >> J'ai passé le jeton à mon next: " << next << endl;
 	avoirJeton=false;
 	next = -1;
+	pos = -1;
 	cptSC=0;
 
 	return NULL;
@@ -231,6 +240,7 @@ void traiterMessage() {
 		pred.clear();
 		cout << "-- -- C'est bon j'ai le jeton." << endl;
 		avoirJeton=true;
+		pos = 0;
 	}
 	
 	if ((m.str).substr(0, 6) == "Commit" ) {
@@ -323,32 +333,49 @@ void traiterMessage() {
 		envoyer( next, oss.str() );
 	}
 
-	if( m.str == "SEARCH_QUEUE" ) {
-		//si j'ai une position dans la file
-		if ( pos != -1 ) {
-			stringstream oss;
-			oss << "ACK_SEARCH_QUEUE" << pos << ";";
-			//si j'ai un next
-			if ( next != -1 ) {
-				//je dis que j'en ai un
-				oss << 1;
+	if ((m.str).substr(0, 12) == "SEARCH_QUEUE" ) {
+		int nbSCEmetteur = atoi(m.str.substr( 12, m.str.length() ).c_str());
+
+		//si j'ai moi meme deja fait un broadcast de SEARCH_QUEUE
+		if ( dejaSQ == 1 ) {
+			//si le nombre de SC de mon Emetteur est plus petit que le mien
+			//OU s'il est egal et qu'il a un plus grand identifiant que le mien
+			if ( nbSCEmetteur < nbSC || ( nbSCEmetteur == nbSC && m.i > mon_port ) ) {
+				dejaSQ=0;
+				//j'abandonne la procédure de recouvrement
+				//et je lance un TokenRequest à l'emetteur
+				envoiTokenRequest( NULL );
 			}
-			//sinon
-			else {
-				//je dis que je n'en ai pas
-				oss << 0;
+		}
+		//sinon, je n'ai pas fait de broadcast SEARCH_QUEUE
+		else {
+			//si j'ai une position dans la file
+			if ( pos != -1 ) {
+				stringstream oss;
+				oss << "ACK_SEARCH_QUEUE" << pos << ";";
+				//si j'ai un next
+				if ( next != -1 ) {
+					//je dis que j'en ai un
+					oss << 1;
+				}
+				//sinon
+				else {
+					//je dis que je n'en ai pas
+					oss << 0;
+				}
+				envoyer( m.i, oss.str() );
 			}
-			envoyer( m.i, oss.str() );
 		}
 	}
 
 	if ((m.str).substr(0, 16) == "ACK_SEARCH_QUEUE" ) {
-		string posStr = m.str.substr(16; m.str.find_first_of(';'));
+		string posStr = m.str.substr(16, m.str.find_first_of(';'));
 		int posEmetteur = atoi(posStr.c_str());
 
 		int haveNext = atoi(m.str.substr(m.str.find_first_of(';')+1, m.str.length()).c_str());
 
-		if ( positionTmp < posEmetteur ) {
+		//si la position de l'emetteur est plus grande
+		if ( posEmetteur > positionTmp ) {
 			//je garde celle reçue
 			positionTmp = posEmetteur;
 			haveNextTmp = haveNext;
@@ -419,7 +446,7 @@ void * accepterVoisins( void * s ) {
 
 //Thread pour se connecter aux sites voisins
 void * connecterVoisins( void * s ) {
-    //on se connecte aux n voisins consecutifs du port 1988
+    //on se connecte aux n voisins consecutifs du port port
     for ( int cpt=0; cpt<n; cpt++ ) {
         //si je ne suis pas deja connecté à ce site et que je ne suis pas le site courant
         if ( voisins[port+cpt] < 0 && port+cpt != mon_port ) {
@@ -452,11 +479,35 @@ void * connecterVoisins( void * s ) {
     return NULL;
 }
 
+void testVivacite() {
+	//on réinitialise commit
+	commit = 0;
+	pred_vivant = 1;
+	int duree = 5;
+	//tant que notre plus proche predecesseur est vivant et que j'ai toujours des predecesseurs
+	while ( pred_vivant > -1 && !pred.empty() ) {
+		envoyer( pred.at(pred.size()-1), "ARE_YOU_ALIVE" );
+		pred_vivant = -1;
+		// Fonction threadée car il doit pouvoir écouter/envoyer des messages pendant qu'il travail.
+		pthread_t IdTimeOut;
+		pthread_create(&IdTimeOut, NULL, FonctionTimeOut, (void *) duree);
+
+		pthread_join(IdTimeOut, NULL);
+	}
+
+	//si mon plus proche predecesseur est mort
+	if ( pred_vivant == -1 ) {
+		//Mecanisme 1 & 2
+		cout << "Mécanisme 1 & 2 -> pas de YEAH reçu" << endl;
+		mecanisme12();
+	}
+}
+
 void mecanisme12() {
 	int i=pred.size()-1;
 	int duree=3;
 	while ( pred_vivant == -1 && i >= 0 ) {
-		cout << "pred.at(i) :" << pred.at(i) << endl;
+/*		cout << "pred.at(i) :" << pred.at(i) << endl;*/
 		envoyer( pred.at(i), "ARE_YOU_ALIVE" );
 		pthread_t IdTimeOut;
 		pthread_create(&IdTimeOut, NULL, FonctionTimeOut, (void *) duree);
@@ -470,6 +521,8 @@ void mecanisme12() {
 		//Mécanisme 1 deja fait ( grâce à next = m.i dans la
 		//réception de ARE_YOU_ALIVE )
 		envoyer( pred_vivant, "CONNEXION" );
+		sleep(2);
+		testVivacite();
 	}
 	//sinon il y a plus de k pannes
 	else {
@@ -510,7 +563,16 @@ void * envoiTokenRequest( void * s ) {
 	string chaine = "TokenRequest";
 	int entier = mon_port;
 	oss << chaine << entier;
-	write(voisins[last], (char*)(oss.str()).c_str() , MAX_SIZE);
+
+	//si je dois l'envoyer à un autre que mon last
+	if ( siteRequestPrioritaire > -1 ) {
+		write(voisins[siteRequestPrioritaire], (char*)(oss.str()).c_str() , MAX_SIZE);
+	}
+	else {
+		write(voisins[last], (char*)(oss.str()).c_str() , MAX_SIZE);
+	}
+
+	siteRequestPrioritaire = -1;
 	cout << "-- -- Envoi de la TokenRequest à mon last: " << last << endl;
 	last = mon_port;
 	cout << "-- -- nouveau last: " << last << endl;
@@ -530,23 +592,29 @@ void * envoiTokenRequest( void * s ) {
 
 		siteTmp = -1;
 
+		dejaSQ=1;
 		//broadcast <SEARCH_QUEUE>
 		for ( int i=port; i<port+n; i++ ) {
 			if ( voisins[i] > -1 && i != mon_port ) {
-				envoyer( i, "SEARCH_QUEUE" );
+				stringstream oss;
+				oss << "SEARCH_QUEUE" << nbSC;
+				envoyer( i, oss.str() );
 			}
 		}
 
+		//J'attends tous les ACK_SEARCH_QUEUE
 		duree = 7;
 		pthread_t IdTimeOut;
 		pthread_create(&IdTimeOut, NULL, FonctionTimeOut, (void *) duree);	
 
 		pthread_join(IdTimeOut, NULL);
 
+		dejaSQ=0;
 		//Si au moins un site m'a repondu
 		if ( siteTmp > -1 ) {
 			//Si le site qui a la plus grande position n'a pas de next (i)
 			if ( haveNextTmp == 0 ) {
+				siteRequestPrioritaire = siteTmp;
 				//on la thread pas car on est déjà dans un thread
 				envoiTokenRequest( NULL );
 			}
@@ -564,27 +632,8 @@ void * envoiTokenRequest( void * s ) {
 		}
 	}
 	else {
-		//on réinitialise commit
-		commit = 0;
-		pred_vivant = 1;
-		duree = 5;
-		//tant que notre plus proche predecesseur est vivant et que j'ai toujours des predecesseurs
-		while ( pred_vivant > -1 && !pred.empty() ) {
-			envoyer( pred.at(pred.size()-1), "ARE_YOU_ALIVE" );
-			pred_vivant = -1;
-			// Fonction threadée car il doit pouvoir écouter/envoyer des messages pendant qu'il travail.
-			pthread_t IdTimeOut;
-			pthread_create(&IdTimeOut, NULL, FonctionTimeOut, (void *) duree);
-
-			pthread_join(IdTimeOut, NULL);
-		}
-
-		//si mon plus proche predecesseur est mort
-		if ( pred_vivant == -1 ) {
-			//Mecanisme 1 & 2
-			cout << "Mécanisme 1 & 2 -> pas de YEAH reçu" << endl;
-			mecanisme12();
-		}
+		//teste la vivacité de mon plus proche prédécesseur et appelle mecanisme12 au besoin
+		testVivacite();
 	}
 
 	return NULL;
@@ -605,7 +654,7 @@ int main ( int argc, char ** argv )
     m.i = -1;
 
     //port par défaut
-    mon_port=1988;
+    mon_port=port;
     //si un port est passé en argument
     if( argv[1] != NULL ) {
         //c'est celui-ci qu'on prend
@@ -629,14 +678,14 @@ int main ( int argc, char ** argv )
 	pthread_create(&IdTimeSC, NULL, FonctionTimeSC, (void *) NULL);
 
 	//Initialisation: Jeton, last, next ....
-    if(mon_port==1988) {
+    if(mon_port==port) {
     	avoirJeton=true;
     	pos = 0;
     }
     else {
     	avoirJeton=false;
     }
-	last = 1988;
+	last = port;
     
     //tant que le site est actif
     while ( choix != 0 ) {
@@ -647,13 +696,25 @@ int main ( int argc, char ** argv )
         //Si il a demandé à avoir le jeton
         if(choix==1) {
         	// S'il l'a deja on lui dit...
-        	if( avoirJeton ) cout << "Tu as déjà le jeton !" <<endl;
+        	if( avoirJeton ) {
+				cout << "Tu as déjà le jeton !" <<endl;
+			}
         	// Sinon on envoi a son last un Token Request avec mon port comme indentifiant
         	// l'identifiant servira surtout quand la Token Request sera tranférée
         	else {
 				pthread_t IdEnvoiTokenRequest;
 				pthread_create(&IdEnvoiTokenRequest, NULL, envoiTokenRequest, (void *) NULL);
         	}
+        }
+
+        //Si il a demandé à avoir le jeton
+        if ( choix == 2 ) {
+			cout << "last: " << last << endl;
+			cout << "next: " << next << endl;
+			cout << "avoirJeton: " << avoirJeton << endl;
+			for ( int i=0; i<pred.size(); i++ ) {
+				cout << "pred " << i << ": " << pred.at(i) << endl;
+			}
         }
     }
 
