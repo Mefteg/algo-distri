@@ -601,8 +601,12 @@ void * envoiTokenRequest( void * s ) {
 		cout << "-- -- Envoi de la TokenRequest à mon last: " << last << endl;
 	}
 
+	//si je n'ai pas envoyé de TokenRequest à un site prioritaire
+	if ( siteRequestPrioritaire == -1 ) {
+		last = mon_port;
+	}
+
 	siteRequestPrioritaire = -1;
-	last = mon_port;
 	cout << "-- -- nouveau last: " << last << endl;
 
 	// Fonction threadée car il doit pouvoir écouter/envoyer des messages pendant qu'il travail.
