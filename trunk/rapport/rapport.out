@@ -2,18 +2,16 @@
 \BOOKMARK [1][-]{section.2}{Objectifs}{}
 \BOOKMARK [1][-]{section.3}{Les algorithmes \351tudi\351s}{}
 \BOOKMARK [2][-]{subsection.3.1}{Algorithme de Naimi-Tr\351hel }{section.3}
-\BOOKMARK [2][-]{subsection.3.2}{Fonctionnement de l'algorithme}{section.3}
-\BOOKMARK [2][-]{subsection.3.3}{Impl\351mentation}{section.3}
-\BOOKMARK [2][-]{subsection.3.4}{L'extension de Naimi-Tr\351hel permettant la tol\351rance aux pannes}{section.3}
-\BOOKMARK [2][-]{subsection.3.5}{Explication du m\351canisme}{section.3}
-\BOOKMARK [2][-]{subsection.3.6}{Impl\351mentation}{section.3}
-\BOOKMARK [2][-]{subsection.3.7}{Atouts et inconv\351nients de cette extension}{section.3}
-\BOOKMARK [2][-]{subsection.3.8}{Am\351lioration de la tol\351rance aux pannes}{section.3}
-\BOOKMARK [2][-]{subsection.3.9}{Les diff\351rents m\351canismes}{section.3}
-\BOOKMARK [2][-]{subsection.3.10}{Impl\351mentation}{section.3}
-\BOOKMARK [2][-]{subsection.3.11}{L'algorithme de Naimi-Tr\351hel sur des exemples}{section.3}
-\BOOKMARK [2][-]{subsection.3.12}{Naimi-Tr\351hel sans extension}{section.3}
-\BOOKMARK [2][-]{subsection.3.13}{Naimi-Tr\351hel avec extension}{section.3}
+\BOOKMARK [2][-]{subsection.3.2}{L'extension de Naimi-Tr\351hel permettant la tol\351rance aux pannes}{section.3}
+\BOOKMARK [2][-]{subsection.3.3}{Explication du m\351canisme}{section.3}
+\BOOKMARK [2][-]{subsection.3.4}{Impl\351mentation}{section.3}
+\BOOKMARK [2][-]{subsection.3.5}{Atouts et inconv\351nients de cette extension}{section.3}
+\BOOKMARK [2][-]{subsection.3.6}{Am\351lioration de l'aogorithme de tol\351rance aux pannes}{section.3}
+\BOOKMARK [2][-]{subsection.3.7}{Les diff\351rents m\351canismes}{section.3}
+\BOOKMARK [2][-]{subsection.3.8}{Impl\351mentation}{section.3}
+\BOOKMARK [2][-]{subsection.3.9}{L'algorithme de Naimi-Tr\351hel sur des exemples}{section.3}
+\BOOKMARK [2][-]{subsection.3.10}{Naimi-Tr\351hel sans extension}{section.3}
+\BOOKMARK [2][-]{subsection.3.11}{Naimi-Tr\351hel avec extension}{section.3}
 \BOOKMARK [1][-]{section.4}{Le developpement}{}
 \BOOKMARK [2][-]{subsection.4.1}{Choix techniques}{section.4}
 \BOOKMARK [3][-]{subsubsection.4.1.1}{Le langage de programmation}{subsection.4.1}
