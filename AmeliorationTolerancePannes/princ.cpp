@@ -274,7 +274,6 @@ void traiterMessage() {
 		int ind2 = (m.str).substr(ind+1, m.str.length()).find_first_of(';');
 		// Entre les 2 <;> il y a la position dans la file des next, on le récupère
 		pos = atoi(((m.str).substr(ind+1, ind2).c_str()));
-		cout << "Position file next: " << pos << endl;
 		
 		// On récupére les prédécésseurs...
 		string ports = m.str.substr(ind+1+ind2+1, m.str.length());
@@ -287,13 +286,6 @@ void traiterMessage() {
 		}
 		pred.push_back(atoi(ports.substr(0, ports.length()).c_str()));
 		
-		cout << "Prédécésseurs: ";
-		//Affichage des prédécésseurs
-		for(int i=0; i<pred.size(); i++) {
-			cout << " | " << pred.at(i);
-			if(i==pred.size()-1) cout << endl;
-		}
-
 		//On a bien reçu un commit!
 		commit = 1;
 	}
@@ -524,7 +516,7 @@ void testVivacite() {
 	//si mon plus proche predecesseur est mort
 	if ( pred_vivant == -1 ) {
 		//Mecanisme 1 & 2
-		cout << "Mécanisme 1 & 2 -> pas de YEAH reçu" << endl;
+		cout << "Mécanisme 1 & 2 -> pas de I_AM_ALIVE reçu" << endl;
 		mecanisme12();
 	}
 }
@@ -622,6 +614,7 @@ void * envoiTokenRequest( void * s ) {
 		//Mécanisme 3
 		cout << "Mécanisme 3 -> pas de COMMIT reçu" << endl;
 
+/*		positionTmp = 0;*/
 		siteTmp = -1;
 		abandonSQ = 0;
 
@@ -642,7 +635,7 @@ void * envoiTokenRequest( void * s ) {
 
 		pthread_join(IdTimeOut, NULL);
 
-		//si je n'ai eu à abandonner
+		//si je n'ai pas eu à abandonner
 		if ( abandonSQ == 0 ) {
 			dejaSQ=0;
 			//Si au moins un site m'a répondu
@@ -665,6 +658,7 @@ void * envoiTokenRequest( void * s ) {
 				//alors personne n'a le jeton et moi je le régénère pumpedup!
 				avoirJeton = true;
 				pos = 0;
+				cout << "-- -- -- Je régénère le jeton" << endl;
 			}
 		}
 	}
@@ -751,8 +745,9 @@ int main ( int argc, char ** argv )
 			cout << "last: " << last << endl;
 			cout << "next: " << next << endl;
 			cout << "avoirJeton: " << avoirJeton << endl;
+			cout << "pos: " << pos << endl;
 			for ( int i=0; i<pred.size(); i++ ) {
-				cout << "pred " << i << ": " << pred.at(i) << endl;
+				cout << "pred(" << i << "): " << pred.at(i) << endl;
 			}
         }
     }
