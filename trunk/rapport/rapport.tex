@@ -241,17 +241,17 @@ Mécanisme M1 : Le site va envoyer à ses prédecesseurs, du plus proche au plus
 questionneur. La file des \next est ainsi reconstruite en conservant son ordre.
 
 Mécanisme M2 : On n'a pas de réponse au message $<$ARE\_YOU\_ALIVE$>$ ici. Tous les sites connus comme prédecesseurs sont défaillants. Le site va alors chercher à se raccorder avec un morceau de la file des \next valide. Il envoie un message $<$SEARCH\_PREV$>$, qui contient sa position dans la file, à tout le monde.
-Seuls les sites étant plus proche du possesseur du jeton doivent répondre et le site va alors choisir parmis ceux-çi celui qui a la position la pls grande (donc le plus éloigné du possesseur du jeton) pour qu'il devienne son plus proche prédecesseur. Un message $<$CONNECTION$>$ informera le site concerné de la manoeuvre de reconnexion
+Seuls les sites étant plus proche du possesseur du jeton doivent répondre et le site va alors choisir parmis ceux-çi celui qui a la position la pls grande (donc le plus éloigné du possesseur du jeton) pour qu'il devienne son plus proche prédecesseur. Un message $<$CONNEION$>$ informera le site concerné de la manoeuvre de reconnexion
 Par contre, si le site ne recoit aucune réponse à sa diffusion de $<$SEARCH\_PREV$>$, il en déduira qu'il n'a aucun prédecesseur, donc que le jeton est perdu. Il peut alors en régeneré un.
 
 Mécanisme M3 : Ici, donc, un ou plusieurs sites suspectent une panne après une attente trop importante du message $<$COMMIT$>$. Le ou les sites concernés n'ont donc ni file des prédecesseurs ni position dans la file des \next. 
 
-Les sites suspectant une panne envoient en broadcast un message $<$SEARCH\_QUEUE,nombreSectionCritique$>$ pour tenter de retrouver une file potentiellement existante. La variable \textit{nombreSectionCritique} correspond au nombre de fois où le site émetteur est entré en section critique depuis le début. Une réponse, du type $<$ACK\_SEARCH\_QUEUE,\textit{position},\textit{aNext}$>$ avec \textit{position} qui indique la position de l'émetteur par rapport au possesseur du jeton et \textit{aNext} qui précise si il a un \next ou pas, n'est envoyée par un site que s'il a une position dans la file des \next. 
+Les sites suspectant une panne envoient en broadcast un message $<$SEARCH\_QUEUE,nbSC$>$ pour tenter de retrouver une file potentiellement existante. La variable \textit{nbSC} correspond au nombre de fois où le site émetteur est entré en section critique depuis le début. Une réponse, du type $<$ACK\_SEARCH\_QUEUE,\textit{position},\textit{avoirNext}$>$ avec \textit{position} qui indique la position de l'émetteur par rapport au possesseur du jeton et \textit{avoirNext} qui précise si il a un \next ou pas, n'est envoyée par un site que s'il a une position dans la file des \next. 
 
-Si jamais plusieurs sites détectent une panne en même temps, plusieurs envois de $<$SEARCH\_QUEUE,nombreSectionCritique$>$ vont se croiser. Si un site, qui a déja commencé une procédure $<$SEARCH\_QUEUE,nombreSectionCritique$>$ reçoit a son tour le même message en provenance d'un autre site (qui a donc lui aussi détecté une panne) il s'agit de décider qui va mener le recouvrement jusqu'au bout. La priorité va au site ayant le moins d'accès à la section critique depuis le début ou, si égalité, ayant le plus petit identifiant.
+Si jamais plusieurs sites détectent une panne en même temps, plusieurs envois de $<$SEARCH\_QUEUE,nombreSectionCritique$>$ vont se croiser. Si un site, qui a déja commencé une procédure $<$SEARCH\_QUEUE,nbSC$>$ reçoit a son tour le même message en provenance d'un autre site (qui a donc lui aussi détecté une panne) il s'agit de décider qui va mener le recouvrement jusqu'au bout. La priorité va au site ayant le moins d'accès à la section critique depuis le début ou, si égalité, ayant le plus petit identifiant.
 
-Une fois toutes les réponses (messages $<$ACK\_SEARCH\_QUEUE,position,aNext$>$) reçues le site va sélectionner le site qui possède la plus grande position afin de se raccrocher au bout de la file des \next.
-Si ce site a un \next alors c'est ce \next qui est défaillant puisque si il avait répondu, il aurait eu une plus grande position et aurait été sélectionné. Le site va donc directement se connecter au site selectionné (envoi d'un message $<$CONNECTION$>$). C'est le dernier site valide du morceau sain de la file des \next.
+Une fois toutes les réponses (messages $<$ACK\_SEARCH\_QUEUE,position,avoirNext$>$) reçues le site va sélectionner le site qui possède la plus grande position afin de se raccrocher au bout de la file des \next.
+Si ce site a un \next alors c'est ce \next qui est défaillant puisque si il avait répondu, il aurait eu une plus grande position et aurait été sélectionné. Le site va donc directement se connecter au site selectionné (envoi d'un message $<$CONNEXION$>$). C'est le dernier site valide du morceau sain de la file des \next.
 Si ce site n'a pas de \next le site demandeur va directement se connecter à sa suite avec une $<$TOKEN\_REQUEST$>$ mais sans passer par l'arbre des \last habituel.
 Par contre, si le site demandeur n'a reçu aucune réponse il peut en déduire qu'il n'y aucun site valide dans la file des \next et il peut donc se considérer comme le premier d'une nouvelle file et regénèrer le jeton.
 
@@ -362,10 +362,12 @@ Par contre, si le site demandeur n'a reçu aucune réponse il peut en déduire q
   \IF { si pas de réponse}
     \STATE on recommence pour les k-1 prédecesseurs de i
   \ENDIF
-  \IF {si une réponse}
+  \IF {si une réponse } 
+    \STATE //Mécanisme 1
     \STATE envoyer($<$CONNEXION$>$) à celui qui a répondu
     \STATE recommencer à l'envoi de $<$ARE\_YOU\_ALIVE$>$ précedent
-  \ELSE
+  \ELSE 
+    \STATE //Mécanisme 2
     \STATE broadcast($<$SEARCH\_PREV, position$_{i}>$)
     \STATE attendre($<$POSITION, position$>$)
     \IF{i a reçu au moins une position}
@@ -380,6 +382,35 @@ Par contre, si le site demandeur n'a reçu aucune réponse il peut en déduire q
     
 \end{algorithmic}
 \end{algorithm}
+
+
+
+\begin{algorithm}[t]
+\caption{Mécanisme 3}
+\label{algo_naimi_trehel_amelioration_recpt_SQ}
+\begin{algorithmic}[1]
+\STATE broadcast($<$SEARCH\_QUEUE, nbSC$>$)
+\STATE attendre les $<$ACK\_SEARCH\_QUEUE, position, avoirNext$>$
+\IF {i n'a pas eu à abandonner}
+  \IF{ au moins un site a répondu}
+    \IF{le site qui a la plus grande position a un \next}
+      \STATE procédure envoi TOKEN\_REQUEST au site qui a la plus grande position
+    \ELSE
+      \STATE envoyer($<$CONNEXION$>$) au site qui a la plus grande position
+    \ENDIF 
+  \ELSE
+    \STATE avoirJeton = vrai
+    \STATE position$_{i}$ = 0
+  \ENDIF
+\ELSE
+  \STATE test de la vivacité du plus proche prédecesseur
+  \STATE appel les mécanismes 1 et 2 au besoin (voir Procédure d'envoi TOKEN\_REQUEST)
+\ENDIF 
+\end{algorithmic}
+\end{algorithm}
+
+
+
 
 \subsection{L'algorithme de \nt sur des exemples}
 
@@ -414,9 +445,11 @@ On peut noter toutefois que TCP fournit un certain nombre de services qui ne doi
 \subsection{L'implémentation}
 
 \subsubsection{L'implémentation des messages}
-En chaîne de caractère, donner un exemple.
+Tous nos messages sont envoyés comme chaînes de caractère.
+Par exemple le message $<$ACK\_SEARCH\_QUEUE,position,avoirNext$>$ est codé ``ACK\_SEARCH\_QUEUE2,1'' et nous effectuons, à la reception, un découpage pour isoler les valeurs. Ici position = 2 et avoirNext = vrai.
 \subsubsection{Des variables globales pour plus de simplicité}
-
+L'interêt du projet n'étant pas forcément la création d'une architecture très poussée nous avons voulu faire au plus simple. Réseau local et utilisions de threads suffisait à simuler un système distribué.
+Comme des procédures devaient ne pas se bloquer (procédure de traitement de message, de timer etc.) nous avons lancé un grand nombre de threads qui ont également l'avantage de se partager des variables globales. Bien qu'une implémentation qu'on pourrait qualifiée de peu élégante, elle nous a énormément nous simplifié la vie.
 
 \newpage
 
