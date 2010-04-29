@@ -58,10 +58,12 @@ Notons également que l'étude s'est faite à partir d'un article en anglais, co
 
 L'implémentation consiste donc en l'application de l'algorithme de \nt à un certain nombre de sites, en réseaux, qui cherchent à acceder à une même ressource alors qu'il n'y qu'un accès possible à la fois.
 
+\newpage
+
 \section{Les algorithmes étudiés}
 Cette partie nous servira à apporter une explication, avec nos propres mots et exemples, des algorithmes que nous avons étudiés.
 
-\subsection{Algorithme de \nt}
+\section{Algorithme de \nt}
 
 L'algorithme de \nt est un modèle permettant à plusieurs sites de fonctionner autour d'une ressource. A un moment donné on veut être assuré qu'un seul site sera en Section Critique. C'est un algorithme d'exclusion mutuelle fonctionnant sur le principe du jeton.
 
@@ -129,7 +131,9 @@ Ecrire l'algo en pseudo langage
 
 %\input{AlgoNaimiTrehel}
 
-\subsection{L'extension de \nt permettant la tolérance aux pannes}
+\newpage
+
+\section{L'extension de \nt permettant la tolérance aux pannes}
 
 Dans sa version la plus simple, l'algorithme de \nt n'assure pas la tolérance aux pannes. Une extension existe toutefois pour répondre à ce besoin.
 
@@ -233,21 +237,153 @@ Mécanisme 2 (M2) : Le site a reçu un message $<$COMMIT$>$ et il y a plus de pa
 Mécanisme 3 (M3) : Le site n'a pas reçu de message $<$COMMIT$>$
 
 Détaillons un peu ces mécanismes.
-Mécanisme M1 : Le site va envoyer à ces prédecesseurs, du plus proche au plus éloigné, un message $<$ARE\_YOU\_ALIVE$>$. On attend une réponse qui sera celle du premier site opérationnel avant le site en question. Ce site, qui répond un message $<$I\_AM\_ALIVE$>$ , prendra comme \next le site questionneur. La file des \next est ainsi reconstruite en conservant son ordre.
+Mécanisme M1 : Le site va envoyer à ses prédecesseurs, du plus proche au plus éloigné, un message $<$ARE\_YOU\_ALIVE$>$. On attend une réponse qui sera celle du premier site opérationnel avant le site en question. Ce site, qui répond un message $<$I\_AM\_ALIVE$>$ , prendra comme \next le site 
+questionneur. La file des \next est ainsi reconstruite en conservant son ordre.
+
 Mécanisme M2 : On n'a pas de réponse au message $<$ARE\_YOU\_ALIVE$>$ ici. Tous les sites connus comme prédecesseurs sont défaillants. Le site va alors chercher à se raccorder avec un morceau de la file des \next valide. Il envoie un message $<$SEARCH\_PREV$>$, qui contient sa position dans la file, à tout le monde.
 Seuls les sites étant plus proche du possesseur du jeton doivent répondre et le site va alors choisir parmis ceux-çi celui qui a la position la pls grande (donc le plus éloigné du possesseur du jeton) pour qu'il devienne son plus proche prédecesseur. Un message $<$CONNECTION$>$ informera le site concerné de la manoeuvre de reconnexion
 Par contre, si le site ne recoit aucune réponse à sa diffusion de $<$SEARCH\_PREV$>$, il en déduira qu'il n'a aucun prédecesseur, donc que le jeton est perdu. Il peut alors en régeneré un.
-Mécanisme M3 : df
 
+Mécanisme M3 : Ici, donc, un ou plusieurs sites suspectent une panne après une attente trop importante du message $<$COMMIT$>$. Le ou les sites concernés n'ont donc ni file des prédecesseurs ni position dans la file des \next. 
+
+Les sites suspectant une panne envoient en broadcast un message $<$SEARCH\_QUEUE,nombreSectionCritique$>$ pour tenter de retrouver une file potentiellement existante. La variable \textit{nombreSectionCritique} correspond au nombre de fois où le site émetteur est entré en section critique depuis le début. Une réponse, du type $<$ACK\_SEARCH\_QUEUE,\textit{position},\textit{aNext}$>$ avec \textit{position} qui indique la position de l'émetteur par rapport au possesseur du jeton et \textit{aNext} qui précise si il a un \next ou pas, n'est envoyée par un site que s'il a une position dans la file des \next. 
+
+Si jamais plusieurs sites détectent une panne en même temps, plusieurs envois de $<$SEARCH\_QUEUE,nombreSectionCritique$>$ vont se croiser. Si un site, qui a déja commencé une procédure $<$SEARCH\_QUEUE,nombreSectionCritique$>$ reçoit a son tour le même message en provenance d'un autre site (qui a donc lui aussi détecté une panne) il s'agit de décider qui va mener le recouvrement jusqu'au bout. La priorité va au site ayant le moins d'accès à la section critique depuis le début ou, si égalité, ayant le plus petit identifiant.
+
+Une fois toutes les réponses (messages $<$ACK\_SEARCH\_QUEUE,position,aNext$>$) reçues le site va sélectionner le site qui possède la plus grande position afin de se raccrocher au bout de la file des \next.
+Si ce site a un \next alors c'est ce \next qui est défaillant puisque si il avait répondu, il aurait eu une plus grande position et aurait été sélectionné. Le site va donc directement se connecter au site selectionné (envoi d'un message $<$CONNECTION$>$). C'est le dernier site valide du morceau sain de la file des \next.
+Si ce site n'a pas de \next le site demandeur va directement se connecter à sa suite avec une $<$TOKEN\_REQUEST$>$ mais sans passer par l'arbre des \last habituel.
+Par contre, si le site demandeur n'a reçu aucune réponse il peut en déduire qu'il n'y aucun site valide dans la file des \next et il peut donc se considérer comme le premier d'une nouvelle file et regénèrer le jeton.
 
 
 
 \paragraph{Implémentation}
-\input{extension2}
+
+\begin{algorithm}[t]
+\caption{Reception par i de $<$TOKEN\_REQUEST, j$>$ de k}
+\label{algo_naimi_trehel_amelioration_recpt_TK}
+\begin{algorithmic}[1]
+
+\IF {\last$_{i}$ $\ne$ i}
+  \STATE envoyer($<$TOKEN\_REQUEST, j$>$) à \last 
+  \STATE \last = j
+  \STATE \next = $\emptyset$
+  \STATE position$_{i}$ = $\emptyset$
+\ELSE
+\STATE \next = j
+\STATE \last = j
+\STATE envoyer($<$COMMIT, liste\_pred$_{i}$, position$_{i}$+1$>$) à \last
+\ENDIF
+\end{algorithmic}
+\end{algorithm}\subsection{L'algorithme de \nt sur des exemples}
+
+
+
+
+
+\begin{algorithm}[t]
+\caption{Reception par i de $<$TOKEN$>$ de j}
+\label{algo_naimi_trehel_amelioration_recpt_T}
+\begin{algorithmic}[1]
+\STATE liste\_pred$_{i}$ = $\emptyset$
+\STATE avoir\_jeton = vrai
+\STATE position$_{i}$ = 0
+\end{algorithmic}
+\end{algorithm}\subsection{L'algorithme de \nt sur des exemples}
+
+
+\begin{algorithm}[t]
+\caption{Reception par i de $<$COMMIT, liste\_pred, position$>$ de j}
+\label{algo_naimi_trehel_amelioration_recpt_C}
+\begin{algorithmic}[1]
+\STATE liste\_pred$_{i}$ = liste\_pred
+\STATE position$_{i}$ = position
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Reception par i de $<$ARE\_YOU\_ALIVE$>$ de j}
+\label{algo_naimi_trehel_amelioration_recpt_AYA}
+\begin{algorithmic}[1]
+\STATE \next = j
+\STATE envoyer($<$I\_AM\_ALIVE$>$) à \next
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[t]
+\caption{Reception par i de $<$SEARCH\_PREV, position$>$ de j}
+\label{algo_naimi_trehel_amelioration_recpt_AYA}
+\begin{algorithmic}[1]
+\IF{position > position$_{i}$}
+  \STATE envoyer($<$POSITION, position$_{i}>$) à j
+\ENDIF 
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[t]
+\caption{Reception par i de $<$CONNEXION$>$ de j}
+\label{algo_naimi_trehel_amelioration_recpt_CX}
+\begin{algorithmic}[1]
+\STATE \next = j
+\STATE envoyer($<$COMMIT, liste\_pred$_{i}$, position$_{i}$+1$>$) à \next
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Reception par i de $<$SEARCH\_QUEUE, nbSC$>$ de j}
+\label{algo_naimi_trehel_amelioration_recpt_SQ}
+\begin{algorithmic}[1]
+\IF { a déja fait un broadcast de $<$SEARCH\_QUEUE, nbSC$>$ }
+  \STATE procédure envoi TOKEN\_REQUEST
+\ELSE
+  \IF {position$_{i} \ne \emptyset$ }
+    \STATE envoyer($<$ACK\_SEARCH\_QUEUE, position$_{i}$, avoirNext$>$) à j
+  \ENDIF  
+\ENDIF   
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[t]
+\caption{Procédure d'envoi TOKEN\_REQUEST par i de j}
+\label{algo_naimi_trehel_amelioration_envoi_TR}
+\begin{algorithmic}[1]
+\STATE envoyer($<$TOKEN\_REQUEST, i$>$) à j
+\IF{j == \last}
+  \STATE \last = i
+\ENDIF
+\STATE attendre $<$COMMIT$>$
+\IF{i n'a pas reçu de $<$COMMIT$>$}
+  \STATE Mécanisme 3
+\ELSE
+  \STATE envoyer($<$ARE\_YOU\_ALIVE$>$) au dernier prédecesseur de i
+  \IF { si pas de réponse}
+    \STATE on recommence pour les k-1 prédecesseurs de i
+  \ENDIF
+  \IF {si une réponse}
+    \STATE envoyer($<$CONNEXION$>$) à celui qui a répondu
+    \STATE recommencer à l'envoi de $<$ARE\_YOU\_ALIVE$>$ précedent
+  \ELSE
+    \STATE broadcast($<$SEARCH\_PREV, position$_{i}>$)
+    \STATE attendre($<$POSITION, position$>$)
+    \IF{i a reçu au moins une position}
+      \STATE envoyer($<$CONNEXION$>$) au site qui a la plus grande position
+    \ELSE
+      \STATE avoir\_jeton = vrai
+      \STATE liste\_pred$_{i}$ = $\emptyset$
+      \STATE position$_{i}$ = $\emptyset$
+    \ENDIF
+  \ENDIF
+\ENDIF  
+    
+\end{algorithmic}
+\end{algorithm}
+
 \subsection{L'algorithme de \nt sur des exemples}
-%\section{\nt sans extension}
-%\section{\nt avec extension}
-\input{exemples}
+
+\newpage
 
 \section{Le developpement}
 
@@ -269,7 +405,7 @@ Ainsi, on retrouve un schéma d'éxécution comme présenté figure 1.
 %Figure 1 : schéma avec les différents threads éxécutés en mm tps. Voir Google draw :P
 
 
-Tous les sites sont équivalant, ils sont tous écrit avec le même code.
+Tous les sites sont équivalents, ils sont tous écrit avec le même code.
 
 %reseau
 Le choix du TCP vient principalement de notre expérience en réseau : nous sommes plus à l'aise avec ce protocole. 
@@ -279,11 +415,10 @@ On peut noter toutefois que TCP fournit un certain nombre de services qui ne doi
 
 \subsubsection{L'implémentation des messages}
 En chaîne de caractère, donner un exemple.
-\subsubsection{La ressource utilisée en Section Critique}
-Traitement sur une images? Si oui en dire un peu plus
 \subsubsection{Des variables globales pour plus de simplicité}
 
 
+\newpage
 
 \section{Conclusion}
 
