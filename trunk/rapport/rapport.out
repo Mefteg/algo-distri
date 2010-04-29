@@ -1,22 +1,6 @@
-\BOOKMARK [1][-]{section.1}{Introduction}{}
-\BOOKMARK [1][-]{section.2}{Objectifs}{}
-\BOOKMARK [1][-]{section.3}{Les algorithmes \351tudi\351s}{}
-\BOOKMARK [1][-]{section.4}{Algorithme de Naimi-Tr\351hel }{}
-\BOOKMARK [1][-]{section.5}{L'extension de Naimi-Tr\351hel permettant la tol\351rance aux pannes}{}
-\BOOKMARK [2][-]{subsection.5.1}{Explication du m\351canisme}{section.5}
-\BOOKMARK [2][-]{subsection.5.2}{Impl\351mentation}{section.5}
-\BOOKMARK [2][-]{subsection.5.3}{Atouts et inconv\351nients de cette extension}{section.5}
-\BOOKMARK [2][-]{subsection.5.4}{Am\351lioration de l'aogorithme de tol\351rance aux pannes}{section.5}
-\BOOKMARK [2][-]{subsection.5.5}{L'algorithme de Naimi-Tr\351hel sur des exemples}{section.5}
-\BOOKMARK [2][-]{subsection.5.6}{L'algorithme de Naimi-Tr\351hel sur des exemples}{section.5}
-\BOOKMARK [2][-]{subsection.5.7}{L'algorithme de Naimi-Tr\351hel sur des exemples}{section.5}
-\BOOKMARK [1][-]{section.6}{Le developpement}{}
-\BOOKMARK [2][-]{subsection.6.1}{Choix techniques}{section.6}
-\BOOKMARK [3][-]{subsubsection.6.1.1}{Le langage de programmation}{subsection.6.1}
-\BOOKMARK [3][-]{subsubsection.6.1.2}{L'architecture}{subsection.6.1}
-\BOOKMARK [2][-]{subsection.6.2}{L'impl\351mentation}{section.6}
-\BOOKMARK [3][-]{subsubsection.6.2.1}{L'impl\351mentation des messages}{subsection.6.2}
-\BOOKMARK [3][-]{subsubsection.6.2.2}{Des variables globales pour plus de simplicit\351}{subsection.6.2}
-\BOOKMARK [1][-]{section.7}{Conclusion}{}
-\BOOKMARK [2][-]{subsection.7.1}{Bilan technique}{section.7}
-\BOOKMARK [2][-]{subsection.7.2}{Bilan personnel}{section.7}
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}
+\BOOKMARK [0][-]{chapter.2}{Les algorithmes \351tudi\351s}{}
+\BOOKMARK [1][-]{section.2.1}{Algorithme de Naimi-Tr\351hel }{chapter.2}
+\BOOKMARK [1][-]{section.2.2}{L'extension de Naimi-Tr\351hel permettant la tol\351rance aux pannes}{chapter.2}
+\BOOKMARK [1][-]{section.2.3}{Le d\351veloppement}{chapter.2}
+\BOOKMARK [1][-]{section.2.4}{Conclusion}{chapter.2}
