@@ -1,12 +1,8 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,12pt]{report}
 
 \usepackage[frenchb]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{amssymb}
-\usepackage{amsmath}
-\usepackage[pdftex]{graphicx}
-\usepackage{titlesec}
+
 \usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
 \usepackage{algorithm,algorithmic}
 
@@ -22,14 +18,13 @@ urlcolor=black
 }
 
 % Raccourcis...
-\newcommand{\psubject}{Algorithme de Naimi-Tréhel et tolérance aux pannes}
 \newcommand{\nt}{Naimi-Tréhel }
 \newcommand{\tf}{Julien Sopena, Luciana Arantes, Martin Bertier, Pierre Sens }
 \newcommand{\last}{\textit{last} }
 \newcommand{\next}{\textit{next} }
 
-\title{\psubject}
-\author{Raimana BOUISSOU, Tom GIMENEZ, Léo RIZZON}
+\title{Algorithme de \nt et tolérance aux pannes  \vspace{0.5cm}}
+\author{Raimana BOUISSOU, Tom GIMENEZ, Léo RIZZON\\  \\Université Montpellier II \\  \\Master 1 Informatique}
 
 
 \date{}
@@ -37,22 +32,24 @@ urlcolor=black
 
 \maketitle
 
-\section*{Ici, j'écris à la suite, sans mise en page, sans fichier séparé. Je le ferai ensuite.}
+\tableofcontents
 
-%Inclure un fichier tex par "section"
-\section{Introduction}
+\newpage
 
-Dans le cadre de notre unité d'enseignement intitulée Algorithmie Distribuée nous avons réalisé un projet qui consiste en l'implémentation d'une amélioration du modèle de tolérance de l'algorithme de \nt.
+\chapter{Introduction}
+
+
+\section*{Contexte}
+
+Dans le cadre de notre unité d'enseignement intitulée Algorithmes Distribués nous avons réalisé un projet qui consiste en l'implémentation d'une amélioration du modèle de tolérance aux pannes de l'algorithme de \nt.
 
 Nous nous sommes basés sur un article co-écrit par Julien Sopena, Luciana Arantes, et Pierre Sens qui propose un algorithme d'exclusion mutuelle, tolérant aux fautes. Basé sur l'algorithme de \nt, il apporte une nette amélioration du coût de recouvrement en terme de messages.
 
-\input{intro}
-
-\section{Objectifs}
+\section*{Objectifs}
 
 L'objectif de ce projet était, d'une part, la compréhension poussée d'un algorithme d'exclusion mutuelle et l'étude d'un système tolérant aux pannes.  Toutefois, il s'agissait assimiler les problèmes et défauts qu'il comportait pour bien appréhender l'amélioration proposée.
 
-D'autre part, l'implémentation de ces modèles pour appliquer toute la théorie à un exemple concret bien que futile.
+D'autre part, l'implémentation de ces modèles pour appliquer toute la théorie à un exemple concret.
 
 Notons également que l'étude s'est faite à partir d'un article en anglais, comme la majorité des articles scientifiques, ce qui constitue une expérience intéressante.
 
@@ -60,28 +57,28 @@ L'implémentation consiste donc en l'application de l'algorithme de \nt à un ce
 
 \newpage
 
-\section{Les algorithmes étudiés}
+\chapter{Les algorithmes étudiés}
+
 Cette partie nous servira à apporter une explication, avec nos propres mots et exemples, des algorithmes que nous avons étudiés.
 
 \section{Algorithme de \nt}
 
 L'algorithme de \nt est un modèle permettant à plusieurs sites de fonctionner autour d'une ressource. A un moment donné on veut être assuré qu'un seul site sera en Section Critique. C'est un algorithme d'exclusion mutuelle fonctionnant sur le principe du jeton.
 
-\paragraph{Fonctionnement de l'algorithme}
+\subsection*{Fonctionnement de l'algorithme}
 
 Le fonctionnement général repose sur la construction dynamique de deux arbres. Aucun site n'a de vue globale de ces arbres et ne connait alors que son \last, dernier possesseur connu du jeton par ce site et son \next à qui ce site doit passé le jeton une fois sorti de S.C.
 
 Ainsi, le cas écheant, un site sait vers qui demandé le jeton et vers qui le transmettre une fois terminé.
 
-A l'initialisation un site possède le jeton et tous les autres ont leur \last qui pointe vers lui. On peut arriver à cet état par un système d'élection par exemple mais nous avons choisi de le faire à la main dans notre configuration, plus petite.
+A l'initialisation un site possède le jeton et tous les autres ont leur \last qui pointe vers lui. On peut arriver à cet état par un système d'élection par exemple, mais nous avons choisi de le faire à la main dans notre configuration, plus petite.
 
 Lorsqu'un site fait une demande de jeton, il l'envoie systématiquement à son \last. La demande va alors transiter dans l'arbre des \last jusqu'à arriver à la racine. A chaque fois, le site relai va faire pointer son \last sur le site demandeur (en effet, c'est celui-çi qui aura le jeton en dernier). La racine va alors faire pointer son \next vers le site demandeur.
 
 Notons que pour éviter une corruption de l'arbre on empêche le site possédant déja le jeton de faire une nouvelle demande. En effet on risquerait un écrasement de l'ancien \next si une nouvelle requête venait au possesseur du jeton.
 
 
-\paragraph{Implémentation}
-Ecrire l'algo en pseudo langage
+\subsection*{Implémentation}
 
 \begin{algorithm}[t]
 \caption{Initialisation}
@@ -127,19 +124,15 @@ Ecrire l'algo en pseudo langage
 \end{algorithmic}
 \end{algorithm}
 
-
-
-%\input{AlgoNaimiTrehel}
-
 \newpage
 
 \section{L'extension de \nt permettant la tolérance aux pannes}
 
 Dans sa version la plus simple, l'algorithme de \nt n'assure pas la tolérance aux pannes. Une extension existe toutefois pour répondre à ce besoin.
 
-\paragraph{Explication du mécanisme}
+\subsection*{Explication du mécanisme}
 
-Dans des conditions réelles d'utilisation il existe toujours un risque de panne sur un ou plusieurs sites. Les modèles utilisant le principe du jeton posent de plus le problème de la perte de celui-çi. Enfin, dans notre cas, la construction d'arbres virtuels dépourvue de vision globale engendre le risque de perversion complète de l'organisation des sites.
+Dans des conditions réelles d'utilisation il existe toujours un risque de panne sur un ou plusieurs sites. Les modèles utilisant le principe du jeton posent de plus le problème de la perte de celui-çi. Enfin, dans notre cas, la construction d'arbres virtuels sans qu'on stock quelque part une vision globale engendre le risque de perversion complète de l'organisation des sites.
 
 Ici, on utilisera, pour détecter une faute, un timeout. Il s'agit d'un timer que l'on considère comme étant un temps raisonnable d'attente avant de suspecter un problème. Notons que ce timeout est à adapter à la configuration : temps de transfert des messages, nombre de sites, temps de S.C..
 
@@ -148,13 +141,11 @@ Dans le cas d'une réponse, ce site n'a alors plus de questions à se poser et n
 
 Dans le cas d'absence de réponse on peut avoir deux cas de figure. En effet, il est possible que ce soit le site possédant le jeton qui a eu une panne. Le jeton est alors perdu et ne peut être régèneré n'importe comment.
 
-Le site suspectant une panne envoie un nouveau message spécfique, <FAILURE>, en broadcast, à l'intention du possesseur du jeton. Si celui-çi répond, le site questionneur refera alors simplement sa demande de jeton pour palier à une éventuelle perte de message lors de la première demande.
+Le site suspectant une panne envoie un nouveau message spécifique, $<$FAILURE$>$, en broadcast, à l'intention du possesseur du jeton. Si celui-çi répond, le site questionneur refera alors simplement sa demande de jeton $<$TOKEN\_REQUEST$>$ pour palier à une éventuelle perte de message lors de la première demande.
 
 Par contre si celui-çi ne répond pas, un réinitialisation globale très coûteuse est effectuée. Un message est alors envoyé à tous pour vérifier si il ni y'a pas d'autres sites qui envisagent de créer un nouveau jeton. Si il y a concurrence, le site au plus petit identifiant génère un jeton, unique, mais toute l'organisation est perdue est doit être refaite. Toutes les demandes doivent être effectuées de nouveau.
  
-\paragraph{Implémentation}
-
-Ecrire l'algo en pseudo langage
+\subsection*{Implémentation}
 
 \begin{algorithm}[t]
 \caption{Demande de jeton par i}
@@ -211,18 +202,16 @@ Ecrire l'algo en pseudo langage
 \end{algorithmic}
 \end{algorithm}
 
-\paragraph{Atouts et inconvénients de cette extension}
-Cette extension répond de manière sûre au problème de pannes. Néanmoins dans le cas de la perte du jeton on a affaire à une réinitialisation complète particulièrement peu efficace et coûteuse. Pire encore, on peut arriver à des coûts encore plus élevés dans certain cas où le jeton n'est pas perdu : on constate alors des procédures de recouvrement individuel cooncurentes.
+\subsection*{Atouts et inconvénients de cette extension}
+Cette extension répond de manière sûre au problème de pannes. Néanmoins dans le cas de la perte du jeton on a affaire à une réinitialisation complète particulièrement peu efficace et coûteuse. Pire encore, on peut arriver à des coûts encore plus élevés dans certain cas où le jeton n'est pas perdu : on constate alors des procédures de recouvrement individuel concurrentes.
 
-\input{extension1}
-
-\subsection{Amélioration de l'aogorithme de tolérance aux pannes}
+\subsection*{Amélioration de l'algorithme de tolérance aux pannes}
 Nous avons vu que, malgré qu'elle parvienne au résultat escompté, l'extension de l'algorithme de \nt coûte cher. C'est dans une optique d'amélioration de ce système que l'algorithme équitable tolérant aux fautes à été imaginé.
 
 On va chercher à conserver l'ordre initial des requêtes de demande de jeton en récupérant les morceaux non corrompus de la file des \next. Si la reconstruction n'est pas possible une nouvelle file des \next et un nouvel arbre des \last seront créés.
 
-\paragraph{Les différents mécanismes}
-Tout d'abord les sites possèdent désormais plus d'informations que dans l'algorithme précédent. Ils connaissent leur position dans la file des \next (3e après le possesseur actuel du jeton par exemple) et également un certain nombre de leurs prédecesseurs. On voit une réponse directe aux problèmes posés par l'algorithme précedant. Là où un broadcast était nécessaire pour trouver son prédecesseur avant, aucun message n'est utile ici! 
+\subsection*{Les différents mécanismes}
+Tout d'abord les sites possèdent désormais plus d'informations que dans l'algorithme précédent. Ils connaissent leur position dans la file des \next (3e après le possesseur actuel du jeton par exemple) et également un certain nombre de leurs prédecesseurs. On voit une réponse directe aux problèmes posés par l'algorithme précedent. Là où un broadcast était nécessaire pour trouver son prédecesseur avant, aucun message n'est utile ici! 
 
 Paradoxalement, on va ajouter un certain nombre de messages pour en économiser si une panne survient.
 
@@ -232,8 +221,8 @@ Après avoir reçu le message $<$COMMIT$>$, le site demandeur va régulièrement
 
 
 Lors d'une détection de panne par un site, on distingue trois grands mécanismes répondant à des cas de figure différents : 
-Mécanisme 1 (M1) : Le site a reçu un message $<$COMMIT$>$ et il y a moins de panne consecutives dans la file des \next que de prédecesseurs connus par ce site. 
-Mécanisme 2 (M2) : Le site a reçu un message $<$COMMIT$>$ et il y a plus de panne consecutives dans la file des \next que de prédecesseurs connus par ce site.
+Mécanisme 1 (M1) : Le site a reçu un message $<$COMMIT$>$ et il y a moins de pannes consécutives dans la file des \next que de prédecesseurs connus par ce site. 
+Mécanisme 2 (M2) : Le site a reçu un message $<$COMMIT$>$ et il y a plus de pannes consécutives dans la file des \next que de prédecesseurs connus par ce site.
 Mécanisme 3 (M3) : Le site n'a pas reçu de message $<$COMMIT$>$
 
 Détaillons un peu ces mécanismes.
@@ -241,23 +230,22 @@ Mécanisme M1 : Le site va envoyer à ses prédecesseurs, du plus proche au plus
 questionneur. La file des \next est ainsi reconstruite en conservant son ordre.
 
 Mécanisme M2 : On n'a pas de réponse au message $<$ARE\_YOU\_ALIVE$>$ ici. Tous les sites connus comme prédecesseurs sont défaillants. Le site va alors chercher à se raccorder avec un morceau de la file des \next valide. Il envoie un message $<$SEARCH\_PREV$>$, qui contient sa position dans la file, à tout le monde.
-Seuls les sites étant plus proche du possesseur du jeton doivent répondre et le site va alors choisir parmis ceux-çi celui qui a la position la pls grande (donc le plus éloigné du possesseur du jeton) pour qu'il devienne son plus proche prédecesseur. Un message $<$CONNEION$>$ informera le site concerné de la manoeuvre de reconnexion
+Seuls les sites étant plus proche du possesseur du jeton doivent répondre et le site va alors choisir parmis ceux-çi celui qui a la position la plus grande (donc le plus éloigné du possesseur du jeton) pour qu'il devienne son plus proche prédecesseur. Un message $<$CONNEXION$>$ informera le site concerné de la manoeuvre de reconnexion.
 Par contre, si le site ne recoit aucune réponse à sa diffusion de $<$SEARCH\_PREV$>$, il en déduira qu'il n'a aucun prédecesseur, donc que le jeton est perdu. Il peut alors en régeneré un.
 
-Mécanisme M3 : Ici, donc, un ou plusieurs sites suspectent une panne après une attente trop importante du message $<$COMMIT$>$. Le ou les sites concernés n'ont donc ni file des prédecesseurs ni position dans la file des \next. 
+Mécanisme M3 : Ici, donc, un ou plusieurs sites suspectent une panne après une attente trop importante du message $<$COMMIT$>$. Le ou les sites concernés n'ont donc ni file de prédecesseurs ni position dans la file des \next. 
 
-Les sites suspectant une panne envoient en broadcast un message $<$SEARCH\_QUEUE,nbSC$>$ pour tenter de retrouver une file potentiellement existante. La variable \textit{nbSC} correspond au nombre de fois où le site émetteur est entré en section critique depuis le début. Une réponse, du type $<$ACK\_SEARCH\_QUEUE,\textit{position},\textit{avoirNext}$>$ avec \textit{position} qui indique la position de l'émetteur par rapport au possesseur du jeton et \textit{avoirNext} qui précise si il a un \next ou pas, n'est envoyée par un site que s'il a une position dans la file des \next. 
+Les sites suspectant une panne envoient en broadcast un message $<$SEARCH\_QUEUE,nbSC$>$ pour tenter de retrouver une file potentiellement existante. La variable \textit{nbSC} correspond au nombre de fois où le site émetteur est entré en section critique depuis le début. Une réponse, du type $<$ACK\_SEARCH\_QUEUE,\textit{position},\textit{avoirNext}$>$ avec \textit{position} qui indique la position de l'émetteur par rapport au possesseur du jeton et \textit{avoirNext} qui précise s'il a un \next ou pas, n'est envoyée par un site que s'il a une position dans la file des \next. 
 
-Si jamais plusieurs sites détectent une panne en même temps, plusieurs envois de $<$SEARCH\_QUEUE,nombreSectionCritique$>$ vont se croiser. Si un site, qui a déja commencé une procédure $<$SEARCH\_QUEUE,nbSC$>$ reçoit a son tour le même message en provenance d'un autre site (qui a donc lui aussi détecté une panne) il s'agit de décider qui va mener le recouvrement jusqu'au bout. La priorité va au site ayant le moins d'accès à la section critique depuis le début ou, si égalité, ayant le plus petit identifiant.
+Si jamais plusieurs sites détectent une panne en même temps, plusieurs envois de $<$SEARCH\_QUEUE,nombreSectionCritique$>$ vont se croiser. Si un site, qui a déja commencé une procédure $<$SEARCH\_QUEUE,nbSC$>$ reçoit à son tour le même message en provenance d'un autre site (qui a donc lui aussi détecté une panne) il s'agit de décider qui va mener le recouvrement jusqu'au bout. La priorité va au site ayant le moins d'accès à la section critique depuis le début ou, si égalité, ayant le plus petit identifiant.
 
 Une fois toutes les réponses (messages $<$ACK\_SEARCH\_QUEUE,position,avoirNext$>$) reçues le site va sélectionner le site qui possède la plus grande position afin de se raccrocher au bout de la file des \next.
-Si ce site a un \next alors c'est ce \next qui est défaillant puisque si il avait répondu, il aurait eu une plus grande position et aurait été sélectionné. Le site va donc directement se connecter au site selectionné (envoi d'un message $<$CONNEXION$>$). C'est le dernier site valide du morceau sain de la file des \next.
+Si ce site a un \next alors c'est ce \next qui est défaillant puisque s'il avait répondu, il aurait eu une plus grande position et aurait été sélectionné. Le site va donc directement se connecter au site selectionné (envoi d'un message $<$CONNEXION$>$). C'est le dernier site valide du morceau sain de la file des \next.
 Si ce site n'a pas de \next le site demandeur va directement se connecter à sa suite avec une $<$TOKEN\_REQUEST$>$ mais sans passer par l'arbre des \last habituel.
-Par contre, si le site demandeur n'a reçu aucune réponse il peut en déduire qu'il n'y aucun site valide dans la file des \next et il peut donc se considérer comme le premier d'une nouvelle file et regénèrer le jeton.
+Par contre, si le site demandeur n'a reçu aucune réponse il peut en déduire qu'il n'y aucun site valide dans la file des \next et il peut donc se considérer comme le premier d'une nouvelle file et régénèrer le jeton.
 
 
-
-\paragraph{Implémentation}
+\subsection*{Implémentation}
 
 \begin{algorithm}[t]
 \caption{Reception par i de $<$TOKEN\_REQUEST, j$>$ de k}
@@ -275,11 +263,7 @@ Par contre, si le site demandeur n'a reçu aucune réponse il peut en déduire q
 \STATE envoyer($<$COMMIT, liste\_pred$_{i}$, position$_{i}$+1$>$) à \last
 \ENDIF
 \end{algorithmic}
-\end{algorithm}\subsection{L'algorithme de \nt sur des exemples}
-
-
-
-
+\end{algorithm}
 
 \begin{algorithm}[t]
 \caption{Reception par i de $<$TOKEN$>$ de j}
@@ -289,7 +273,7 @@ Par contre, si le site demandeur n'a reçu aucune réponse il peut en déduire q
 \STATE avoir\_jeton = vrai
 \STATE position$_{i}$ = 0
 \end{algorithmic}
-\end{algorithm}\subsection{L'algorithme de \nt sur des exemples}
+\end{algorithm}
 
 
 \begin{algorithm}[t]
@@ -378,8 +362,7 @@ Par contre, si le site demandeur n'a reçu aucune réponse il peut en déduire q
       \STATE position$_{i}$ = $\emptyset$
     \ENDIF
   \ENDIF
-\ENDIF  
-    
+\ENDIF
 \end{algorithmic}
 \end{algorithm}
 
@@ -410,58 +393,59 @@ Par contre, si le site demandeur n'a reçu aucune réponse il peut en déduire q
 \end{algorithm}
 
 
+\clearpage
 
-
-\subsection{L'algorithme de \nt sur des exemples}
-
-\newpage
-
-\section{Le developpement}
+\section{Le développement}
 
 Cette partie apportera quelques précisions sur la manière dont nous avons travaillé, 
 
-\subsection{Choix techniques}
-\subsubsection{Le langage de programmation}
+\subsection*{Choix techniques}
+
+\subsubsection*{Le langage de programmation}
 Nous avons choisi le C comme langage de programmation. Plusieurs raisons ont motivé ce choix. 
 D'une part nous avons une solide expérience avec ce langage. Nous trouvons facilement nos marques.
 De plus, avec le C, nous avons les clés dont nous avions besoin : réseau, traitement d'une ressource, multi-threading.
 
-\subsubsection{L'architecture}
+\subsubsection*{L'architecture}
 
 L'implémentation soulève un certain nombre de questions qui restent en retrait dans la partie théorique. Nous avons alors dû choisir une architecture cohérente avec nos besoins : réseau, travail en Section Critique.
 
 Par exemple, dans la théorie, les sites restent à l'écoute de messages alors qu'ils sont en S.C. ce qui nécessite des actions non bloquantes. Ainsi, le choix du multi-threading s'est revelé idéal.
-Ainsi, on retrouve un schéma d'éxécution comme présenté figure 1.
 
-%Figure 1 : schéma avec les différents threads éxécutés en mm tps. Voir Google draw :P
+Tous les sites sont équivalents, ils sont tous écrits avec le même code.
 
-
-Tous les sites sont équivalents, ils sont tous écrit avec le même code.
-
-%reseau
 Le choix du TCP vient principalement de notre expérience en réseau : nous sommes plus à l'aise avec ce protocole. 
 On peut noter toutefois que TCP fournit un certain nombre de services qui ne doivent pas être utilisés dans notre projet. En effet, la détection de pannes est alors aisée avec le système en mode connecté qui surveille la perte de lien entre deux sites. Dans l'interêt de notre projet nous n'avons bien sûr pas utilisé cette fonction.
 
-\subsection{L'implémentation}
+\subsection*{L'implémentation}
 
-\subsubsection{L'implémentation des messages}
-Tous nos messages sont envoyés comme chaînes de caractère.
-Par exemple le message $<$ACK\_SEARCH\_QUEUE,position,avoirNext$>$ est codé ``ACK\_SEARCH\_QUEUE2,1'' et nous effectuons, à la reception, un découpage pour isoler les valeurs. Ici position = 2 et avoirNext = vrai.
-\subsubsection{Des variables globales pour plus de simplicité}
-L'interêt du projet n'étant pas forcément la création d'une architecture très poussée nous avons voulu faire au plus simple. Réseau local et utilisions de threads suffisait à simuler un système distribué.
-Comme des procédures devaient ne pas se bloquer (procédure de traitement de message, de timer etc.) nous avons lancé un grand nombre de threads qui ont également l'avantage de se partager des variables globales. Bien qu'une implémentation qu'on pourrait qualifiée de peu élégante, elle nous a énormément nous simplifié la vie.
+\subsubsection*{L'implémentation des messages}
+Tous nos messages sont envoyés comme chaînes de caractères.
+Par exemple le message $<$ACK\_SEARCH\_QUEUE,position,avoirNext$>$ est codé ``ACK\_SEARCH\_QUEUE2,1'' et nous effectuons, à la réception, un découpage pour isoler les valeurs. Ici position = 2 et avoirNext = vrai.
+
+\subsubsection*{Des variables globales pour plus de simplicité}
+L'interêt du projet n'étant pas forcément la création d'une architecture très poussée nous avons voulu faire au plus simple. Réseau local et utilisions de threads suffisaient à créer un système distribué.
+Comme des procédures devaient ne pas se bloquer (procédure de traitement de message, de timer etc.) nous avons lancé un grand nombre de threads qui ont également l'avantage de se partager des variables globales. Bien que cela implique une implémentation qu'on pourrait qualifiée de peu élégante, elle nous a énormément simplifié la vie.
 
 \newpage
 
 \section{Conclusion}
 
-\subsection{Bilan technique}
-Bilan par rapport aux objectifs.
-Trucs qui marchent pas, à améliorer...
+\subsection*{Bilan technique}
 
-\subsection{Bilan personnel}
-Ce que ça nous a apporté, interêt, expérience...
+Nous avons réussi à implémenter tous les algorithmes demandés. Tous les mécanismes de l'amélioration de l'algorithme de \nt sont opérationnels. Nous avons éffectué une solide batterie de tests en essayant de rencontrer un maximum de configurations possibles.
 
-\input{conclusion}
+Toutefois on pourra noter que notre code n'est pas parfait, nos choix se portant parfois d'avantage sur la simplicité que sur l'élégance du code. 
+
+\subsection*{Bilan personnel}
+
+Ce projet a été bien plus important que nous ne l'imaginions au premier abord, tant en quantité de travail que sur le nombre et la diversité des domaines sur lesquels nous avons travaillé.
+
+Premièrement ces algorithmes, forts connus, nous ont plongés au coeur de l'algorithmie distribuée nous obligeant à en bien comprendre les principes, en nous confrontant à bon nombre de problèmes classiques. L'amélioration de l'algorithme de \nt est un modèle assez complexe qui n'a pas été facile à bien cerné. Pourtant, le travail terminé, nous avons réellement la sensation d'avoir progressé dans cette discipline.
+
+Il est clair que notre expérience de développement, bien que n'étant pas la première, est toujours aussi importante et nous a familiarisé de nouveau avec le langage C, le réseau, le multi-threading.
+
+Enfin ce projet à été l'occasion de travailler en un groupe qui ne l'avait jamais été. Une excellente surprise que nous tenterons de renouveler à l'avenir. Une équipe complémentaire et équilibrée qui a permis d'arriver au bout de nos objectifs.
+
 
 \end{document}
