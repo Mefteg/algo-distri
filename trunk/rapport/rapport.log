@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2010.1.4)  29 APR 2010 01:14
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2010.1.4)  29 APR 2010 03:16
 entering extended mode
  %&-line parsing enabled.
 **rapport.tex
@@ -482,15 +482,19 @@ File: hpdftex.def 2007/02/07 v6.75r Hyperref driver for pdfTeX
 \Fld@listcount=\count120
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 22.
- (./rapport.aux)
+ (./rapport.aux
+
+LaTeX Warning: Label `algo_naimi_trehel_amelioration_recpt_AYA' multiply define
+d.
+
+)
 \openout1 = `rapport.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 36.
 LaTeX Font Info:    ... okay on input line 36.
 LaTeX Font Info:    Checking defaults for T1/lmr/m/n on input line 36.
 LaTeX Font Info:    Try loading font information for T1+lmr on input line 36.
-
-(/usr/share/texmf/tex/latex/lm/t1lmr.fd
+ (/usr/share/texmf/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2007/01/14 v1.3 Font defs for Latin Modern
 )
 LaTeX Font Info:    ... okay on input line 36.
@@ -591,410 +595,1010 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 39.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
-) (./intro.tex)
-Overfull \hbox (0.35431pt too wide) in paragraph at lines 62--63
+) (./intro.tex) [1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (0.35431pt too wide) in paragraph at lines 64--65
 []\T1/cmr/m/n/12 Cette par-tie nous ser-vira � ap-por-ter une ex-pli-ca-tion, a
 vec nos propres mots et exemples,
  []
 
-[1
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 85.
-
-Overfull \hbox (17.95915pt too wide) in paragraph at lines 132--132
- |[]\T1/cmr/bx/n/14.4 L'extension de Naimi-Tr�hel per-met-tant la to-l�-rance a
-ux pannes| 
- []
-
+put line 87.
 [2pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1})
  has been already used, duplicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.141 
-      pdfTeX warning (ext4): destination with the same identifier (name{algorit
-hm.\\theHalgorithm\040}) has been already used, duplicate ignored
+l.134 \newpage
+              pdfTeX warning (ext4): destination with the same identifier (name
+{algorithm.\\theHalgorithm\040}) has been already used, duplicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.141 
+l.134 \newpage
+              pdfTeX warning (ext4): destination with the same identifier (name
+{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.134 \newpage
+              pdfTeX warning (ext4): destination with the same identifier (name
+{ALC@line.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.134 \newpage
+              ] [3pdfTeX warning (ext4): destination with the same identifier (
+name{algorithm.\\theHalgorithm\040}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.141 
+l.154 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
 e.1}) has been already used, duplicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.141 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
+.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
+e.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
+.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
+.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
+.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
+.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
+.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
+.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
+.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{algorit
+hm.\\theHalgorithm\040}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
+.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
+e.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
+.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
+      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
+e.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \endgroup \set@typeset@protect 
+l.154 
       ]pdfTeX warning (ext4): destination with the same identifier (name{ALC@re
 m.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.160 \STATE
+l.164 \STATE
              envoyer($<$TOKEN\_REQUEST$>$) et armer le TimerpdfTeX warning (ext
 4): destination with the same identifier (name{ALC@line.1}) has been already us
 ed, duplicate ignored
 <to be read again> 
                    \relax 
-l.160 \STATE
+l.164 \STATE
              envoyer($<$TOKEN\_REQUEST$>$) et armer le TimerpdfTeX warning (ext
 4): destination with the same identifier (name{ALC@rem.1}) has been already use
 d, duplicate ignored
 <to be read again> 
                    \relax 
-l.161 \IF{fin du Timer $\land$ pas reçu le TOKEN}
+l.165 \IF{fin du Timer $\land$ pas reçu le TOKEN}
                                                   pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@line.2}) has been already used, duplic
 ate ignored
 <to be read again> 
                    \relax 
-l.161 \IF{fin du Timer $\land$ pas reçu le TOKEN}
+l.165 \IF{fin du Timer $\land$ pas reçu le TOKEN}
                                                   pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
 te ignored
 <to be read again> 
                    \relax 
-l.162   \STATE
+l.166   \STATE
+               broadcast($<$CONSULT$>$)pdfTeX warning (ext4): destination with 
+the same identifier (name{ALC@line.3}) has been already used, duplicate ignored
+
+<to be read again> 
+                   \relax 
+l.166   \STATE
                broadcast($<$CONSULT$>$)pdfTeX warning (ext4): destination with 
 the same identifier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.163 ...pas de réponse au message $<$CONSULT$>$}
+l.167 ...pas de réponse au message $<$CONSULT$>$}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@line.4}) has been already used, duplic
+ate ignored
+<to be read again> 
+                   \relax 
+l.167 ...pas de réponse au message $<$CONSULT$>$}
                                                   pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
 te ignored
 <to be read again> 
                    \relax 
-l.164     \STATE
+l.168     \STATE
+                 broadcast($<$FAILURE$>$)pdfTeX warning (ext4): destination wit
+h the same identifier (name{ALC@line.5}) has been already used, duplicate ignor
+ed
+<to be read again> 
+                   \relax 
+l.168     \STATE
                  broadcast($<$FAILURE$>$)pdfTeX warning (ext4): destination wit
 h the same identifier (name{ALC@rem.1}) has been already used, duplicate ignore
 d
 <to be read again> 
                    \relax 
-l.165     \IF{réponse du possesseur du jeton}
+l.169     \IF{réponse du possesseur du jeton}
+                                              pdfTeX warning (ext4): destinatio
+n with the same identifier (name{ALC@line.6}) has been already used, duplicate 
+ignored
+<to be read again> 
+                   \relax 
+l.169     \IF{réponse du possesseur du jeton}
                                               pdfTeX warning (ext4): destinatio
 n with the same identifier (name{ALC@rem.1}) has been already used, duplicate i
 gnored
 <to be read again> 
                    \relax 
-l.166       \STATE
+l.170       \STATE
+                   envoyer($<$TOKEN\_REQUEST$>$) au site qui a répondupdfTeX w
+arning (ext4): destination with the same identifier (name{ALC@line.7}) has been
+ already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.170       \STATE
                    envoyer($<$TOKEN\_REQUEST$>$) au site qui a répondupdfTeX w
 arning (ext4): destination with the same identifier (name{ALC@rem.1}) has been 
 already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.168       \STATE
+l.172       \STATE
+                   broadcast($<$ELECTION$>$)pdfTeX warning (ext4): destination 
+with the same identifier (name{ALC@line.8}) has been already used, duplicate ig
+nored
+<to be read again> 
+                   \relax 
+l.172       \STATE
                    broadcast($<$ELECTION$>$)pdfTeX warning (ext4): destination 
 with the same identifier (name{ALC@rem.1}) has been already used, duplicate ign
 ored
 <to be read again> 
                    \relax 
-l.168       \STATE
+l.172       \STATE
+                   broadcast($<$ELECTION$>$)pdfTeX warning (ext4): destination 
+with the same identifier (name{ALC@line.9}) has been already used, duplicate ig
+nored
+<to be read again> 
+                   \relax 
+l.172       \STATE
                    broadcast($<$ELECTION$>$)pdfTeX warning (ext4): destination 
 with the same identifier (name{ALC@rem.1}) has been already used, duplicate ign
 ored
 <to be read again> 
                    \relax 
-l.169 ...ne réponse ou si je n'ai pas abandonné}
+l.173 ...ne réponse ou si je n'ai pas abandonné}
                                                   pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
 te ignored
 <to be read again> 
                    \relax 
-l.170 	\STATE
+l.174 	\STATE
               régèneration du jetonpdfTeX warning (ext4): destination with th
 e same identifier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.171       \ENDIF
+l.175       \ENDIF
                   pdfTeX warning (ext4): destination with the same identifier (
 name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.172     \ENDIF
+l.176     \ENDIF
                 pdfTeX warning (ext4): destination with the same identifier (na
 me{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.173   \ENDIF
+l.177   \ENDIF
               pdfTeX warning (ext4): destination with the same identifier (name
 {ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.174 \ENDIF
+l.178 \ENDIF
             pdfTeX warning (ext4): destination with the same identifier (name{a
 lgorithm.\\theHalgorithm\040}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.176 \end{algorithm}
+l.180 \end{algorithm}
                      pdfTeX warning (ext4): destination with the same identifie
 r (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.182 \IF{\next$_{i}$ $=$ i}
+l.186 \IF{\next$_{i}$ $=$ i}
                             pdfTeX warning (ext4): destination with the same id
 entifier (name{ALC@line.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.182 \IF{\next$_{i}$ $=$ i}
+l.186 \IF{\next$_{i}$ $=$ i}
                             pdfTeX warning (ext4): destination with the same id
 entifier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.183 \STATE
+l.187 \STATE
              envoyer($<$T\_MON\_NEXT$>$) à emetteurpdfTeX warning (ext4): dest
 ination with the same identifier (name{ALC@line.2}) has been already used, dupl
 icate ignored
 <to be read again> 
                    \relax 
-l.183 \STATE
+l.187 \STATE
              envoyer($<$T\_MON\_NEXT$>$) à emetteurpdfTeX warning (ext4): dest
 ination with the same identifier (name{ALC@rem.1}) has been already used, dupli
 cate ignored
 <to be read again> 
                    \relax 
-l.184 \ENDIF
+l.188 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{A
+LC@line.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.188 \ENDIF
             pdfTeX warning (ext4): destination with the same identifier (name{a
 lgorithm.\\theHalgorithm\040}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.186 \end{algorithm}
+l.190 \end{algorithm}
                      pdfTeX warning (ext4): destination with the same identifie
 r (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.192 \IF{j'ai le jeton}
+l.196 \IF{j'ai le jeton}
                         pdfTeX warning (ext4): destination with the same identi
 fier (name{ALC@line.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.192 \IF{j'ai le jeton}
+l.196 \IF{j'ai le jeton}
                         pdfTeX warning (ext4): destination with the same identi
 fier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.193 \STATE
+l.197 \STATE
              envoyer($<$J\_AI\_JETON$>$) à emetteurpdfTeX warning (ext4): dest
 ination with the same identifier (name{ALC@line.2}) has been already used, dupl
 icate ignored
 <to be read again> 
                    \relax 
-l.193 \STATE
+l.197 \STATE
              envoyer($<$J\_AI\_JETON$>$) à emetteurpdfTeX warning (ext4): dest
 ination with the same identifier (name{ALC@rem.1}) has been already used, dupli
 cate ignored
 <to be read again> 
                    \relax 
-l.194 \ENDIF
+l.198 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{A
+LC@line.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.198 \ENDIF
             pdfTeX warning (ext4): destination with the same identifier (name{a
 lgorithm.\\theHalgorithm\040}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.196 \end{algorithm}
+l.200 \end{algorithm}
                      pdfTeX warning (ext4): destination with the same identifie
 r (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.202 ...je cherche déja à régènerer le jeton}
+l.206 ...je cherche déja à régènerer le jeton}
                                                   pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@line.1}) has been already used, duplic
 ate ignored
 <to be read again> 
                    \relax 
-l.202 ...je cherche déja à régènerer le jeton}
+l.206 ...je cherche déja à régènerer le jeton}
                                                   pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
 te ignored
 <to be read again> 
                    \relax 
-l.203 ...tifiant$_{i}$ > identidiant$_{emetteur}$}
+l.207 ...tifiant$_{i}$ > identidiant$_{emetteur}$}
                                                   pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@line.2}) has been already used, duplic
 ate ignored
 <to be read again> 
                    \relax 
-l.203 ...tifiant$_{i}$ > identidiant$_{emetteur}$}
+l.207 ...tifiant$_{i}$ > identidiant$_{emetteur}$}
                                                   pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
 te ignored
 <to be read again> 
                    \relax 
-l.204   \STATE
+l.208   \STATE
+               abandon de la procédure de régènerationpdfTeX warning (ext4):
+ destination with the same identifier (name{ALC@line.3}) has been already used,
+ duplicate ignored
+<to be read again> 
+                   \relax 
+l.208   \STATE
                abandon de la procédure de régènerationpdfTeX warning (ext4):
  destination with the same identifier (name{ALC@rem.1}) has been already used, 
 duplicate ignored
 <to be read again> 
                    \relax 
-l.205   \ENDIF
+l.209   \ENDIF
+              pdfTeX warning (ext4): destination with the same identifier (name
+{ALC@line.4}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.209   \ENDIF
               pdfTeX warning (ext4): destination with the same identifier (name
 {ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.206 \ENDIF
+l.210 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{A
+LC@line.5}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.210 \ENDIF
             pdfTeX warning (ext4): destination with the same identifier (name{a
 lgorithm.\\theHalgorithm\040}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.208 \end{algorithm}
-                      (./extension1.tex) [3pdfTeX warning (ext4): destination w
-ith the same identifier (name{algorithm.\\theHalgorithm\040}) has been already 
-used, duplicate ignored
+l.212 \end{algorithm}
+                      (./extension1.tex) [4] [5]
+Overfull \hbox (129.18962pt too wide) in paragraph at lines 249--250
+[]\T1/cmr/m/n/12 Les sites sus-pec-tant une panne en-voient en broad-cast un me
+s-sage $\OML/cmm/m/it/12 <$\T1/cmr/m/n/12 SEARCH_QUEUE,nombreSectionCritique$\O
+ML/cmm/m/it/12 >$
+ []
+
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
-.1}) has been already used, duplicate ignored
+                   \relax 
+l.267 \IF {\last$_{i}$ $\ne$ i}
+                               pdfTeX warning (ext4): destination with the same
+ identifier (name{ALC@line.1}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
-e.1}) has been already used, duplicate ignored
+                   \relax 
+l.267 \IF {\last$_{i}$ $\ne$ i}
+                               pdfTeX warning (ext4): destination with the same
+ identifier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
-.1}) has been already used, duplicate ignored
+                   \relax 
+l.268   \STATE
+               envoyer($<$TOKEN\_REQUEST, j$>$) à \lastpdfTeX warning (ext4): 
+destination with the same identifier (name{ALC@line.2}) has been already used, 
+duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
-e.2}) has been already used, duplicate ignored
+                   \relax 
+l.268   \STATE
+               envoyer($<$TOKEN\_REQUEST, j$>$) à \lastpdfTeX warning (ext4): 
+destination with the same identifier (name{ALC@rem.1}) has been already used, d
+uplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
-.1}) has been already used, duplicate ignored
+                   \relax 
+l.269   \STATE
+               \last = jpdfTeX warning (ext4): destination with the same identi
+fier (name{ALC@line.3}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
-.1}) has been already used, duplicate ignored
+                   \relax 
+l.269   \STATE
+               \last = jpdfTeX warning (ext4): destination with the same identi
+fier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
-.1}) has been already used, duplicate ignored
+                   \relax 
+l.270   \STATE
+               \next = $\emptyset$pdfTeX warning (ext4): destination with the s
+ame identifier (name{ALC@line.4}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
-.1}) has been already used, duplicate ignored
+                   \relax 
+l.270   \STATE
+               \next = $\emptyset$pdfTeX warning (ext4): destination with the s
+ame identifier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
-.1}) has been already used, duplicate ignored
+                   \relax 
+l.271   \STATE
+               position$_{i}$ = $\emptyset$pdfTeX warning (ext4): destination w
+ith the same identifier (name{ALC@line.5}) has been already used, duplicate ign
+ored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
-.1}) has been already used, duplicate ignored
+                   \relax 
+l.271   \STATE
+               position$_{i}$ = $\emptyset$pdfTeX warning (ext4): destination w
+ith the same identifier (name{ALC@rem.1}) has been already used, duplicate igno
+red
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
-.1}) has been already used, duplicate ignored
+                   \relax 
+l.273 \STATE
+             \next = jpdfTeX warning (ext4): destination with the same identifi
+er (name{ALC@line.6}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{algorit
-hm.\\theHalgorithm\040}) has been already used, duplicate ignored
+                   \relax 
+l.273 \STATE
+             \next = jpdfTeX warning (ext4): destination with the same identifi
+er (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
-.1}) has been already used, duplicate ignored
+                   \relax 
+l.273 \STATE
+             \next = jpdfTeX warning (ext4): destination with the same identifi
+er (name{ALC@line.7}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
-e.1}) has been already used, duplicate ignored
+                   \relax 
+l.273 \STATE
+             \next = jpdfTeX warning (ext4): destination with the same identifi
+er (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
-.1}) has been already used, duplicate ignored
+                   \relax 
+l.274 \STATE
+             \last = jpdfTeX warning (ext4): destination with the same identifi
+er (name{ALC@line.8}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
-e.2}) has been already used, duplicate ignored
+                   \relax 
+l.274 \STATE
+             \last = jpdfTeX warning (ext4): destination with the same identifi
+er (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.217 
-      ] [4pdfTeX warning (ext4): destination with the same identifier (name{ALC
-@line.3}) has been already used, duplicate ignored
+                   \relax 
+l.275 \STATE
+             envoyer($<$COMMIT, liste\_pred$_{i}$, position$_{i}$+1$>$) à \...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.9}) 
+has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.226 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
-e.4}) has been already used, duplicate ignored
+                   \relax 
+l.275 \STATE
+             envoyer($<$COMMIT, liste\_pred$_{i}$, position$_{i}$+1$>$) à \...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.226 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
-e.5}) has been already used, duplicate ignored
+                   \relax 
+l.276 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{A
+LC@line.10}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.226 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
-e.6}) has been already used, duplicate ignored
+                   \relax 
+l.276 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{a
+lgorithm.\\theHalgorithm\040}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.226 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
-e.7}) has been already used, duplicate ignored
+                   \relax 
+l.278 \end{algorithm}
+                     \subsection{L'algorithme de \nt sur des exemples}pdfTeX wa
+rning (ext4): destination with the same identifier (name{ALC@rem.1}) has been a
+lready used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.226 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
-e.8}) has been already used, duplicate ignored
+                   \relax 
+l.288 \STATE
+             liste\_pred$_{i}$ = $\emptyset$pdfTeX warning (ext4): destination 
+with the same identifier (name{ALC@line.1}) has been already used, duplicate ig
+nored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.226 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
-e.9}) has been already used, duplicate ignored
+                   \relax 
+l.288 \STATE
+             liste\_pred$_{i}$ = $\emptyset$pdfTeX warning (ext4): destination 
+with the same identifier (name{ALC@rem.1}) has been already used, duplicate ign
+ored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.226 
-      pdfTeX warning (ext4): destination with the same identifier (name{ALC@lin
-e.3}) has been already used, duplicate ignored
+                   \relax 
+l.289 \STATE
+             avoir\_jeton = vraipdfTeX warning (ext4): destination with the sam
+e identifier (name{ALC@line.2}) has been already used, duplicate ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.226 
-      ] (./extension2.tex) (./exemples.tex) [5pdfTeX warning (ext4): destinatio
-n with the same identifier (name{ALC@line.3}) has been already used, duplicate 
+                   \relax 
+l.289 \STATE
+             avoir\_jeton = vraipdfTeX warning (ext4): destination with the sam
+e identifier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.290 \STATE
+             position$_{i}$ = 0pdfTeX warning (ext4): destination with the same
+ identifier (name{ALC@line.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.290 \STATE
+             position$_{i}$ = 0pdfTeX warning (ext4): destination with the same
+ identifier (name{algorithm.\\theHalgorithm\040}) has been already used, duplic
+ate ignored
+<to be read again> 
+                   \relax 
+l.292 \end{algorithm}
+                     \subsection{L'algorithme de \nt sur des exemples}pdfTeX wa
+rning (ext4): destination with the same identifier (name{ALC@rem.1}) has been a
+lready used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.299 \STATE
+             liste\_pred$_{i}$ = liste\_predpdfTeX warning (ext4): destination 
+with the same identifier (name{ALC@line.1}) has been already used, duplicate ig
+nored
+<to be read again> 
+                   \relax 
+l.299 \STATE
+             liste\_pred$_{i}$ = liste\_predpdfTeX warning (ext4): destination 
+with the same identifier (name{ALC@rem.1}) has been already used, duplicate ign
+ored
+<to be read again> 
+                   \relax 
+l.300 \STATE
+             position$_{i}$ = positionpdfTeX warning (ext4): destination with t
+he same identifier (name{ALC@line.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.300 \STATE
+             position$_{i}$ = positionpdfTeX warning (ext4): destination with t
+he same identifier (name{algorithm.\\theHalgorithm\040}) has been already used,
+ duplicate ignored
+<to be read again> 
+                   \relax 
+l.302 \end{algorithm}
+                     pdfTeX warning (ext4): destination with the same identifie
+r (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.308 \STATE
+             \next = jpdfTeX warning (ext4): destination with the same identifi
+er (name{ALC@line.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.308 \STATE
+             \next = jpdfTeX warning (ext4): destination with the same identifi
+er (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.309 \STATE
+             envoyer($<$I\_AM\_ALIVE$>$) à \nextpdfTeX warning (ext4): destina
+tion with the same identifier (name{ALC@line.2}) has been already used, duplica
+te ignored
+<to be read again> 
+                   \relax 
+l.309 \STATE
+             envoyer($<$I\_AM\_ALIVE$>$) à \nextpdfTeX warning (ext4): destina
+tion with the same identifier (name{algorithm.\\theHalgorithm\040}) has been al
+ready used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.311 \end{algorithm}
+                     pdfTeX warning (ext4): destination with the same identifie
+r (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.318 \IF{position > position$_{i}$}
+                                    pdfTeX warning (ext4): destination with the
+ same identifier (name{ALC@line.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.318 \IF{position > position$_{i}$}
+                                    pdfTeX warning (ext4): destination with the
+ same identifier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.319   \STATE
+               envoyer($<$POSITION, position$_{i}>$) à jpdfTeX warning (ext4):
+ destination with the same identifier (name{ALC@line.2}) has been already used,
+ duplicate ignored
+<to be read again> 
+                   \relax 
+l.319   \STATE
+               envoyer($<$POSITION, position$_{i}>$) à jpdfTeX warning (ext4):
+ destination with the same identifier (name{ALC@rem.1}) has been already used, 
+duplicate ignored
+<to be read again> 
+                   \relax 
+l.320 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{A
+LC@line.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.320 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{a
+lgorithm.\\theHalgorithm\040}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.322 \end{algorithm}
+                     pdfTeX warning (ext4): destination with the same identifie
+r (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.329 \STATE
+             \next = jpdfTeX warning (ext4): destination with the same identifi
+er (name{ALC@line.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.329 \STATE
+             \next = jpdfTeX warning (ext4): destination with the same identifi
+er (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.330 \STATE
+             envoyer($<$COMMIT, liste\_pred$_{i}$, position$_{i}$+1$>$) à \...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.2}) 
+has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.330 \STATE
+             envoyer($<$COMMIT, liste\_pred$_{i}$, position$_{i}$+1$>$) à \...
+pdfTeX warning (ext4): destination with the same identifier (name{algorithm.\\t
+heHalgorithm\040}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.332 \end{algorithm}
+                     pdfTeX warning (ext4): destination with the same identifie
+r (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.338 ... broadcast de $<$SEARCH\_QUEUE, nbSC$>$ }
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@line.1}) has been already used, duplic
+ate ignored
+<to be read again> 
+                   \relax 
+l.338 ... broadcast de $<$SEARCH\_QUEUE, nbSC$>$ }
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
+te ignored
+<to be read again> 
+                   \relax 
+l.339   \STATE
+               procédure envoi TOKEN\_REQUESTpdfTeX warning (ext4): destinatio
+n with the same identifier (name{ALC@line.2}) has been already used, duplicate 
 ignored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.256 \subsection{Choix techniques}
-                                   pdfTeX warning (ext4): destination with the 
-same identifier (name{ALC@line.3}) has been already used, duplicate ignored
+                   \relax 
+l.339   \STATE
+               procédure envoi TOKEN\_REQUESTpdfTeX warning (ext4): destinatio
+n with the same identifier (name{ALC@rem.1}) has been already used, duplicate i
+gnored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.256 \subsection{Choix techniques}
-                                   pdfTeX warning (ext4): destination with the 
-same identifier (name{ALC@line.4}) has been already used, duplicate ignored
+                   \relax 
+l.341   \IF
+            {position$_{i} \ne \emptyset$ }pdfTeX warning (ext4): destination w
+ith the same identifier (name{ALC@line.3}) has been already used, duplicate ign
+ored
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.256 \subsection{Choix techniques}
-                                   pdfTeX warning (ext4): destination with the 
-same identifier (name{ALC@line.5}) has been already used, duplicate ignored
+                   \relax 
+l.341   \IF
+            {position$_{i} \ne \emptyset$ }pdfTeX warning (ext4): destination w
+ith the same identifier (name{ALC@rem.1}) has been already used, duplicate igno
+red
 <to be read again> 
-                   \endgroup \set@typeset@protect 
-l.256 \subsection{Choix techniques}
-                                   ] [6] (./conclusion.tex) [7] (./rapport.aux)
+                   \relax 
+l.341   \IF {position$_{i} \ne \emptyset$ }
+                                           pdfTeX warning (ext4): destination w
+ith the same identifier (name{ALC@line.4}) has been already used, duplicate ign
+ored
+<to be read again> 
+                   \relax 
+l.341   \IF {position$_{i} \ne \emptyset$ }
+                                           pdfTeX warning (ext4): destination w
+ith the same identifier (name{ALC@rem.1}) has been already used, duplicate igno
+red
+<to be read again> 
+                   \relax 
+l.342     \STATE
+                 envoyer($<$ACK\_SEARCH\_QUEUE, position$_{i}$, avoirNext$>$...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.5}) 
+has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.342     \STATE
+                 envoyer($<$ACK\_SEARCH\_QUEUE, position$_{i}$, avoirNext$>$...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.343   \ENDIF
+              pdfTeX warning (ext4): destination with the same identifier (name
+{ALC@line.6}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.343   \ENDIF
+              pdfTeX warning (ext4): destination with the same identifier (name
+{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.344 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{A
+LC@line.7}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.344 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{a
+lgorithm.\\theHalgorithm\040}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.346 \end{algorithm}
+                     pdfTeX warning (ext4): destination with the same identifie
+r (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.353 \STATE
+             envoyer($<$TOKEN\_REQUEST, i$>$) à jpdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@line.1}) has been already used, duplic
+ate ignored
+<to be read again> 
+                   \relax 
+l.353 \STATE
+             envoyer($<$TOKEN\_REQUEST, i$>$) à jpdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
+te ignored
+<to be read again> 
+                   \relax 
+l.354 \IF{j == \last}
+                     pdfTeX warning (ext4): destination with the same identifie
+r (name{ALC@line.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.354 \IF{j == \last}
+                     pdfTeX warning (ext4): destination with the same identifie
+r (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.355   \STATE
+               \last = ipdfTeX warning (ext4): destination with the same identi
+fier (name{ALC@line.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.355   \STATE
+               \last = ipdfTeX warning (ext4): destination with the same identi
+fier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.356 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{A
+LC@line.4}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.356 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{A
+LC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.357 \STATE
+             attendre $<$COMMIT$>$pdfTeX warning (ext4): destination with the s
+ame identifier (name{ALC@line.5}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.357 \STATE
+             attendre $<$COMMIT$>$pdfTeX warning (ext4): destination with the s
+ame identifier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.358 \IF{i n'a pas reçu de $<$COMMIT$>$}
+                                          pdfTeX warning (ext4): destination wi
+th the same identifier (name{ALC@line.6}) has been already used, duplicate igno
+red
+<to be read again> 
+                   \relax 
+l.358 \IF{i n'a pas reçu de $<$COMMIT$>$}
+                                          pdfTeX warning (ext4): destination wi
+th the same identifier (name{ALC@rem.1}) has been already used, duplicate ignor
+ed
+<to be read again> 
+                   \relax 
+l.359   \STATE
+               Mécanisme 3pdfTeX warning (ext4): destination with the same ide
+ntifier (name{ALC@line.7}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.359   \STATE
+               Mécanisme 3pdfTeX warning (ext4): destination with the same ide
+ntifier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.361   \STATE
+               envoyer($<$ARE\_YOU\_ALIVE$>$) au dernier prédecesseur de ipdfT
+eX warning (ext4): destination with the same identifier (name{ALC@line.8}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.361   \STATE
+               envoyer($<$ARE\_YOU\_ALIVE$>$) au dernier prédecesseur de ipdfT
+eX warning (ext4): destination with the same identifier (name{ALC@rem.1}) has b
+een already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.361   \STATE
+               envoyer($<$ARE\_YOU\_ALIVE$>$) au dernier prédecesseur de ipdfT
+eX warning (ext4): destination with the same identifier (name{ALC@line.9}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.361   \STATE
+               envoyer($<$ARE\_YOU\_ALIVE$>$) au dernier prédecesseur de ipdfT
+eX warning (ext4): destination with the same identifier (name{ALC@rem.1}) has b
+een already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.362   \IF { si pas de réponse}
+                                 pdfTeX warning (ext4): destination with the sa
+me identifier (name{ALC@line.10}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.362   \IF { si pas de réponse}
+                                 pdfTeX warning (ext4): destination with the sa
+me identifier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.363     \STATE
+                 on recommence pour les k-1 prédecesseurs de ipdfTeX warning (
+ext4): destination with the same identifier (name{ALC@line.11}) has been alread
+y used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.363     \STATE
+                 on recommence pour les k-1 prédecesseurs de ipdfTeX warning (
+ext4): destination with the same identifier (name{ALC@rem.1}) has been already 
+used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.364   \ENDIF
+              pdfTeX warning (ext4): destination with the same identifier (name
+{ALC@line.12}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.364   \ENDIF
+              pdfTeX warning (ext4): destination with the same identifier (name
+{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.365   \IF {si une réponse}
+                             pdfTeX warning (ext4): destination with the same i
+dentifier (name{ALC@line.13}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.365   \IF {si une réponse}
+                             pdfTeX warning (ext4): destination with the same i
+dentifier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.366     \STATE
+                 envoyer($<$CONNEXION$>$) à celui qui a répondupdfTeX warning
+ (ext4): destination with the same identifier (name{ALC@line.14}) has been alre
+ady used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.366     \STATE
+                 envoyer($<$CONNEXION$>$) à celui qui a répondupdfTeX warning
+ (ext4): destination with the same identifier (name{ALC@rem.1}) has been alread
+y used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.367     \STATE
+                 recommencer à l'envoi de $<$ARE\_YOU\_ALIVE$>$ précedentpdfT
+eX warning (ext4): destination with the same identifier (name{ALC@line.15}) has
+ been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.367     \STATE
+                 recommencer à l'envoi de $<$ARE\_YOU\_ALIVE$>$ précedentpdfT
+eX warning (ext4): destination with the same identifier (name{ALC@rem.1}) has b
+een already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.369     \STATE
+                 broadcast($<$SEARCH\_PREV, position$_{i}>$)pdfTeX warning (ext
+4): destination with the same identifier (name{ALC@rem.1}) has been already use
+d, duplicate ignored
+<to be read again> 
+                   \relax 
+l.369     \STATE
+                 broadcast($<$SEARCH\_PREV, position$_{i}>$)pdfTeX warning (ext
+4): destination with the same identifier (name{ALC@rem.1}) has been already use
+d, duplicate ignored
+<to be read again> 
+                   \relax 
+l.370     \STATE
+                 attendre($<$POSITION, position$>$)pdfTeX warning (ext4): desti
+nation with the same identifier (name{ALC@rem.1}) has been already used, duplic
+ate ignored
+<to be read again> 
+                   \relax 
+l.371     \IF{i a reçu au moins une position}
+                                              pdfTeX warning (ext4): destinatio
+n with the same identifier (name{ALC@rem.1}) has been already used, duplicate i
+gnored
+<to be read again> 
+                   \relax 
+l.372       \STATE
+                   envoyer($<$CONNEXION$>$) au site qui a la plus grande pos...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.374       \STATE
+                   avoir\_jeton = vraipdfTeX warning (ext4): destination with t
+he same identifier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.374       \STATE
+                   avoir\_jeton = vraipdfTeX warning (ext4): destination with t
+he same identifier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.375       \STATE
+                   liste\_pred$_{i}$ = $\emptyset$pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
+te ignored
+<to be read again> 
+                   \relax 
+l.376       \STATE
+                   position$_{i}$ = $\emptyset$pdfTeX warning (ext4): destinati
+on with the same identifier (name{ALC@rem.1}) has been already used, duplicate 
+ignored
+<to be read again> 
+                   \relax 
+l.377     \ENDIF
+                pdfTeX warning (ext4): destination with the same identifier (na
+me{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.378   \ENDIF
+              pdfTeX warning (ext4): destination with the same identifier (name
+{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.379 \ENDIF
+            pdfTeX warning (ext4): destination with the same identifier (name{a
+lgorithm.\\theHalgorithm\040}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.382 \end{algorithm}
+                      [6] [7] [8] (./conclusion.tex) [9] [10] (./rapport.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
  ) 
 Here is how much of TeX's memory you used:
- 5645 strings out of 95063
- 72704 string characters out of 1182611
- 142137 words of memory out of 1500000
- 8659 multiletter control sequences out of 10000+50000
+ 5653 strings out of 95063
+ 72920 string characters out of 1182611
+ 145579 words of memory out of 1500000
+ 8661 multiletter control sequences out of 10000+50000
  17740 words of font info for 52 fonts, out of 1200000 for 2000
  28 hyphenation exceptions out of 8191
- 27i,6n,29p,483b,810s stack positions out of 5000i,500n,6000p,200000b,5000s
+ 27i,6n,29p,649b,810s stack positions out of 5000i,500n,6000p,200000b,5000s
  </home/fragma/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1440.600pk> </home/
 fragma/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti1200.600pk> </home/fragma/.te
 xmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1000.600pk> </home/fragma/.texmf-var/fo
@@ -1006,9 +1610,9 @@ en/ec/ecbx1728.600pk> </home/fragma/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm
 texlive/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/texmf-texlive/fonts/type1/
 bluesky/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy10.pf
 b>
-Output written on rapport.pdf (7 pages, 139586 bytes).
+Output written on rapport.pdf (10 pages, 154401 bytes).
 PDF statistics:
- 485 PDF objects out of 1000 (max. 8388607)
- 57 named destinations out of 1000 (max. 131072)
- 217 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 518 PDF objects out of 1000 (max. 8388607)
+ 69 named destinations out of 1000 (max. 131072)
+ 193 words of extra memory for PDF output out of 10000 (max. 10000000)
 
